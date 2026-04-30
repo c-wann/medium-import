@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2026-02-07T12:00:00.000Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>用 Microsoft Foundry Agent 打造你的 Teams 智能助理：從零到上線完整指南</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    AI Agent 的時代已經不是未來式，而是現在進行式。<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/overview">Microsoft Foundry Agent Service</a> 是一個全託管的 AI 代理平台，讓你不需要管理任何基礎設施，就能把智慧助理直接部署到 Microsoft Teams，讓同事在日常工作中隨時呼叫。這篇文章帶你從概念到實際上線，完整走一遍。
+                </p>
+
+                <h2>什麼是 Microsoft Foundry Agent Service？</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Foundry Agent Service 是一個全託管平台，負責代理的託管、擴展、身份驗證、可觀測性與企業安全。開發者只需要專注在 Agent 本身的邏輯：它能做什麼、怎麼思考、能呼叫哪些工具。底層的伺服器、負載、監控，全部由 Azure 幫你搞定。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    每個 Agent 都由三個核心組件組成：<strong>模型</strong>（來自 Foundry 模型目錄，例如 GPT-4o、Llama、DeepSeek）、<strong>指令</strong>（定義目標、限制與行為）、以及<strong>工具</strong>（讓 Agent 能夠搜尋網路、讀取檔案、呼叫 API，甚至連接自訂的 MCP 伺服器）。三者組合在一起，就形成一個能夠跨步驟自主完成任務的智能代理，遠超過一般聊天機器人的能力。
+                </p>
+
+                <h2>三種 Agent 類型，選哪一個最適合你？</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Foundry 提供三種 Agent 類型，適合不同的需求與技術背景。<strong>Prompt Agent（提示型代理）</strong>完全透過設定來定義，不需要寫任何程式碼。你在 Foundry Portal 上填好指令、選好模型、掛上工具，幾分鐘內就有一個可以測試的代理。這是快速驗證想法、建立內部工具的最佳起點。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    <strong>Workflow Agent（工作流程代理，預覽版）</strong>適合需要多步驟協作、需要代理之間互相呼叫的場景，例如審核流程、資料彙整、人工確認節點。你可以在 Portal 上用視覺化方式建立工作流程，也可以用 YAML 在 VS Code 中定義。<strong>Hosted Agent（託管代理，預覽版）</strong>則是給需要完全掌控邏輯的工程師：用 Agent Framework、LangGraph 或自己的程式碼寫好之後，打包成容器部署到 Foundry，後續的執行環境與擴展由平台負責。
+                </p>
+
+                <h2>從 Foundry Portal 建立你的第一個 Prompt Agent</h2>
+
+                <p class="pw-post-body-paragraph">
+                    打開 <a href="https://ai.azure.com">Microsoft Foundry Portal</a>，進入你的專案後，點選「Agents」然後建立新代理。先給代理取個名字——<strong>注意：名字一旦設定就無法更改</strong>，之後在程式碼中會以 <code>agent_name:version</code> 的格式引用它。接著填寫系統指令（Instructions），告訴代理它的角色是什麼、能做什麼、不能做什麼。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    工具的部分，Foundry 內建了網路搜尋、檔案搜尋、記憶體、程式碼直譯器，以及透過 MCP 協議連接外部系統的能力。工具設定完成後，先在 <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/concept-playgrounds">Agents Playground</a> 裡測試，確認回應正確、工具有正常呼叫，再按下「Save」儲存為版本。每次儲存都會建立不可變的版本快照，讓你可以隨時回溯或比較不同版本的差異。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    上線前建議啟用 <strong>Agent Tracing</strong>，它會記錄每一個模型呼叫、工具呼叫與決策過程，幫助你找出延遲熱點和行為異常。等到測試穩定、評估通過，才進入發布流程——根據<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/development-lifecycle">官方開發生命週期指南</a>，跳過評估直接發布是最常見的踩坑原因。
+                </p>
+
+                <h2>將 Agent 發布到 Microsoft Teams</h2>
+
+                <p class="pw-post-body-paragraph">
+                    在 Foundry Portal 按下「Publish」，選擇「Publish to Teams and Microsoft 365 Copilot」，流程會自動建立一個 Azure Bot Service 資源（你的訂閱需要先註冊 <code>Microsoft.BotService</code> 提供者）。接著填寫對外顯示的名稱、版本號、一句話描述，以及開發者資訊。<strong>請勿在任何欄位中放入 API 金鑰或機密資訊</strong>，這些欄位對使用者可見。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    發布範圍有兩種選擇：「<strong>Just you（僅自己）</strong>」立即生效，不需要管理員審核，代理會出現在你的 Teams 代理商店的「Your agents」區塊，你可以把代理連結分享給特定人員；「<strong>People in your organization（整個組織）</strong>」則需要 Microsoft 365 管理員在<a href="https://admin.cloud.microsoft/?#/agents/all/requested">管理中心</a>審核通過後，才會出現在「Built by your org」區塊供全組織使用。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    發布後，Teams 使用者就能在 Microsoft 365 Copilot 介面找到並呼叫你的代理，不需要安裝任何額外的應用程式。如果你之後更新了 Agent 邏輯，只要在 Foundry 中選擇新版本（或設定「Always use latest」），不需要重新走一次發布到 Teams 的流程——穩定端點 URL 不會改變。值得注意的是，目前發布到 Microsoft 365 的代理<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/publish-copilot#limitations">不支援串流回應與引用來源</a>，這點在規劃使用者體驗時需要納入考量。
+                </p>
+
+                <h2>企業安全與上線後的監控</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Foundry Agent Service 內建企業級的安全架構。每個代理都可以擁有獨立的 <strong>Microsoft Entra 身份</strong>，透過 RBAC 精細控制它能存取哪些 Azure 資源，而不需要在程式碼或設定中硬寫金鑰。發布之後，要特別注意：專案身份的權限<strong>不會自動轉移</strong>給已發布的代理，你需要手動為代理身份重新指派必要的 RBAC 角色。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    內容安全方面，平台整合了防護機制來降低提示注入（Prompt Injection）攻擊的風險，包括跨提示注入（Cross-Prompt Injection Attack, XPIA）的防護。網路隔離方面，Prompt Agent 與 Workflow Agent 支援 Azure Virtual Network，讓你的代理在私有網路中執行，滿足資料在地化的合規要求。上線後，透過 Application Insights 整合的<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard">監控儀表板</a>，可以持續追蹤品質指標與安全訊號。
+                </p>
+
+                <h2>開始你的 AI Agent 之旅</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Microsoft Foundry Agent Service 把過去需要大量基礎設施工程的 AI 代理開發，壓縮到一個下午就能完成的流程。從在 Portal 建立第一個 Prompt Agent、在 Playground 測試、到發布進 Teams 讓同事使用，整條路線清晰且有官方文件可循。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    建議從最簡單的 Prompt Agent 開始，先跑通一個真實的使用情境，再根據需要升級到 Workflow 或 Hosted Agent。AI Agent 的價值不在於技術的複雜度，而在於它真正解決了多少人的日常問題——越快讓真實使用者用到，越快知道要往哪個方向迭代。你的第一個 Teams Agent，就從今天開始吧。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
