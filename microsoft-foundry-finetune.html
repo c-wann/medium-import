@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-03-04T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>用 Microsoft Foundry 微調模型：先做對，再做大</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">多數微調專案失敗，不是因為模型不夠強，而是團隊把微調拿去解決不適合的問題。根據 <a href="https://platform.openai.com/docs/guides/fine-tuning">OpenAI 的 fine-tuning 指南</a>，微調最適合強化輸出格式、品牌語氣與任務遵循；如果你的需求是回答會持續變動的內部知識或最新文件，通常應該先考慮 RAG，而不是直接改模型權重。</p>
+
+                <h2>先確認微調是不是正確工具</h2>
+                <p class="pw-post-body-paragraph">在 Microsoft Foundry 開始之前，第一步不是整理資料，而是確認模型能不能微調。<a href="https://learn.microsoft.com/azure/ai-services/openai/concepts/models">Azure OpenAI 模型文件</a>與<a href="https://learn.microsoft.com/azure/ai-services/openai/how-to/fine-tuning">微調教學</a>都指出，模型是否支援微調會受到模型家族、區域、部署方式與帳號權限影響，所以先檢查可用性，比盲目準備資料更重要。</p>
+                <p class="pw-post-body-paragraph">如果你的目標是讓客服回覆更像品牌口吻、讓摘要固定輸出欄位，或讓模型更穩地遵循一種任務流程，微調通常值得做。相反地，如果你只是想補新知識，微調往往不是最划算的工具，因為它會學到行為模式，不會自動替你管理知識更新。</p>
+
+                <h2>在 Foundry 裡，資料品質比資料量更重要</h2>
+                <p class="pw-post-body-paragraph">依照 <a href="https://learn.microsoft.com/azure/ai-services/openai/how-to/fine-tuning">Azure 的流程文件</a>，訓練資料通常要整理成相容格式，並區分訓練集與驗證集。真正關鍵的不是你有多少筆，而是每一筆示範答案是否真的代表你希望模型上線後怎麼說；這也是 <a href="https://platform.openai.com/docs/guides/fine-tuning">OpenAI 最佳實務</a> 一再強調的地方。</p>
+                <p class="pw-post-body-paragraph">成本也要一起看。從 <a href="https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/">Azure OpenAI Pricing</a> 可以看到，訓練與推論是分開計價的，所以比較穩的做法不是一次丟最大資料集，而是先用小型高品質資料跑出第一版，再決定是否擴大。</p>
+
+                <h2>上線前要比較，不要只看 loss</h2>
+                <p class="pw-post-body-paragraph">微調完成後，最重要的問題不是 loss 有沒有下降，而是它有沒有比原模型更穩定地完成你的任務。<a href="https://openai.com/index/introducing-improvements-to-the-fine-tuning-api-and-expanding-our-custom-models-program/">OpenAI 對 fine-tuning API 的更新說明</a>特別強調比較式評估的重要性，也就是拿同一組測試資料，同時比較基線模型與微調模型的格式遵循、拒答品質與人工偏好。</p>
+                <p class="pw-post-body-paragraph">部署時也不要把安全完全交給微調本身。<a href="https://learn.microsoft.com/azure/ai-services/openai/concepts/content-filter">Azure OpenAI 的內容過濾文件</a>說明了服務層級的安全機制，因此比較成熟的做法，通常是把微調模型、系統提示詞、內容過濾與應用層規則一起設計。</p>
+
+                <p class="pw-post-body-paragraph">如果你準備第一次在 Microsoft Foundry 做微調，最實際的起點不是大規模訓練，而是先選一個明確失敗案例，用少量高品質資料做出可比較的第一版。只要它能穩定改善你最在意的任務，再擴大資料與部署，風險和成本都會低得多。</p>
+            </section>
+        </article>
+    </main>
+</body>
+</html>
