@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2026-05-03T12:00:00.000Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Using Azure Function to Trade on TradingView (2/3)</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    With your Azure Function deployed and your Binance API key stored safely, one piece is still missing: the signal. In this part we connect TradingView alerts directly to your function so the bot wakes up automatically — no manual clicking, no missed entries.
+                </p>
+
+                <h2>Writing a Pine Script Strategy with Alert Conditions</h2>
+
+                <p class="pw-post-body-paragraph">
+                    TradingView's <a href="https://www.tradingview.com/pine-script-docs/concepts/alerts">Pine Script v5</a> lets you attach alert conditions to any strategy so a notification fires the moment a trade signal is generated. A simple EMA crossover is a good starting point — the script below fires a buy signal when the fast EMA crosses above the slow EMA, and a sell signal when it crosses below.
+                </p>
+
+                <pre>
+//@version=5
+strategy("EMA Crossover Bot", overlay=true)
+
+fastLen = input.int(9,  "Fast EMA")
+slowLen = input.int(21, "Slow EMA")
+
+fastEMA = ta.ema(close, fastLen)
+slowEMA = ta.ema(close, slowLen)
+
+longCond  = ta.crossover(fastEMA,  slowEMA)
+shortCond = ta.crossunder(fastEMA, slowEMA)
+
+if longCond
+    strategy.entry("Long", strategy.long)
+    alert('{"symbol":"BNBUSDT","side":"BUY","price":"' + str.tostring(close) + '","total":"100"}', alert.freq_once_per_bar)
+
+if shortCond
+    strategy.close("Long")
+    alert('{"symbol":"BNBUSDT","side":"SELL","price":"' + str.tostring(close) + '","total":"100"}', alert.freq_once_per_bar)
+
+plot(fastEMA, color=color.blue,  title="Fast EMA")
+plot(slowEMA, color=color.orange, title="Slow EMA")
+                </pre>
+
+                <p class="pw-post-body-paragraph">
+                    Notice the <code>alert()</code> call embeds a JSON string directly into the alert message. The fields — <code>symbol</code>, <code>side</code>, <code>price</code>, and <code>total</code> — match exactly the keys that <code>function_app.py</code> reads from the request body in <a href="https://github.com/c-wann/binance-tradingview-bot/blob/main/function_app.py">the GitHub repo from Part 1</a>. Keeping the shape consistent means no changes are needed on the Azure side.
+                </p>
+
+                <h2>Configuring the TradingView Webhook</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Once the strategy is added to your chart, create a new alert: right-click the chart, select <strong>Add Alert</strong>, then choose your strategy as the condition. Scroll down to the <strong>Notifications</strong> tab and tick <strong>Webhook URL</strong>. Paste the Azure Function URL you copied in Part 1 (the one from <em>Get function URL → default (Function key)</em>) into the field.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    TradingView sends a POST request to that URL within seconds of the alert firing. According to <a href="https://www.tradingview.com/support/solutions/43000529348-about-webhooks/">TradingView's webhook documentation</a>, requests originate from a fixed set of IP addresses — 52.89.214.238, 34.212.75.30, 54.218.53.128, and 52.32.178.7 — which you can optionally allowlist on your Azure Function's networking settings for an extra layer of defence. TradingView also requires 2-factor authentication to be enabled on your account before webhooks are available.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    One important constraint: TradingView cancels any webhook call that takes longer than three seconds to respond. Azure Functions on the Consumption plan typically cold-start in under two seconds, but if you notice missed alerts during low-traffic periods, consider switching to the <strong>Always On</strong> setting in your Function App's Configuration blade to keep the host warm.
+                </p>
+
+                <h2>Structuring the JSON Alert Payload</h2>
+
+                <p class="pw-post-body-paragraph">
+                    When the alert message is valid JSON, TradingView automatically sets the <code>Content-Type</code> header to <code>application/json</code>. This is exactly what <code>req.get_json()</code> in our Python function expects. The payload must supply the four keys the function reads: <code>symbol</code> (e.g., <code>BNBUSDT</code>), <code>side</code> (<code>BUY</code> or <code>SELL</code>), <code>price</code>, and <code>total</code> (the USDT notional value).
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    You can embed dynamic values from Pine Script using string concatenation with <code>str.tostring()</code>, as shown above. For the <code>total</code> field, a fixed notional like <code>"100"</code> means each alert places a $100 order — simple and predictable. More advanced setups can calculate position size as a percentage of portfolio equity using Pine's <code>strategy.equity</code> variable and pass it through the same field.
+                </p>
+
+                <h2>Securing Your Endpoint and Testing the Flow</h2>
+
+                <p class="pw-post-body-paragraph">
+                    The function URL already contains a <strong>function key</strong> query parameter (<code>?code=...</code>), which acts as a basic shared secret. For production, consider moving your Binance API key and secret — currently stored as Azure Function App Settings — into <a href="https://learn.microsoft.com/en-us/azure/key-vault/general/overview">Azure Key Vault</a>. Key Vault encrypts secrets at rest using FIPS 140-validated HSMs, and your Function App can retrieve them at runtime through a managed identity with no secrets ever stored in application settings or code.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    To wire this up: create a Key Vault, add your <code>api_key</code> and <code>api_secret</code> as secrets, enable a system-assigned managed identity on the Function App, and grant it the <strong>Key Vault Secrets User</strong> role. Then replace the App Setting values with Key Vault references in the format <code>@Microsoft.KeyVault(SecretUri=https://&lt;vault-name&gt;.vault.azure.net/secrets/api-key/)</code> — Azure resolves these transparently at runtime.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Before going live, replay a test alert using Postman with the same JSON body your Pine Script produces. Verify the response is <code>200 OK</code> and check the Azure Function's <strong>Monitor</strong> tab to confirm the order appears in the invocation logs. Run the same test against Binance's testnet endpoint (<code>https://testnet.binance.vision</code>) by temporarily swapping the client base URL, so you can validate order placement without risking real funds.
+                </p>
+
+                <h2>What's Next</h2>
+
+                <p class="pw-post-body-paragraph">
+                    At this point the pipeline is complete: TradingView fires → Azure Function receives → Binance executes. The bot is reliable, but it is still mechanical — it executes every signal without judgement. In Part 3 we introduce <strong>Microsoft Foundry</strong>, Microsoft's unified AI platform, to add an intelligence layer that can validate signals, check market conditions, and decide whether an order should actually be placed. The result is a trading bot with a reasoning brain sitting between the signal and the exchange.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    <em>Disclaimer: This series is for educational purposes only and does not constitute financial advice. Always test with small amounts and use Binance's testnet before deploying with real funds.</em>
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2026-05-03T12:00:00.000Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Using Azure Function to Trade on TradingView (3/3)</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    Your bot now executes every TradingView signal without hesitation — which is exactly the problem. A crossover in a choppy, low-volume market deserves a second opinion. In this final part we add that second opinion by wiring a <strong>Microsoft Foundry</strong> AI agent into the pipeline, giving the bot a reasoning layer that decides whether a signal is worth acting on before the order ever reaches Binance.
+                </p>
+
+                <h2>Why Add AI Reasoning to a Trading Bot?</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Rule-based strategies are fast and deterministic, but they are blind to context. An EMA crossover fires the same way during a strong trend as it does during a noisy sideways market. A human trader would glance at volume, the broader market direction, and recent news before clicking buy — an AI agent can do the same thing programmatically in milliseconds.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Rather than replacing the strategy, the agent acts as a gatekeeper. The Azure Function that was called directly by TradingView in Part 2 becomes an internal tool that the Foundry agent decides when to invoke. The agent can consult real-time web data, apply reasoning rules, and either approve the trade or suppress it with a logged explanation — all without touching the Pine Script or the Binance integration you already built.
+                </p>
+
+                <h2>What is Microsoft Foundry?</h2>
+
+                <p class="pw-post-body-paragraph">
+                    <a href="https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry">Microsoft Foundry</a> is a unified Azure platform-as-a-service for building production AI applications. It consolidates models, agents, tools, and observability under a single resource — replacing the older split between Azure OpenAI and Azure AI Studio. The platform gives you access to over 1,900 models (GPT-5, Claude, Mistral, Phi-4, and more) and a tool catalog with over 1,400 integrations, all governed through a single Azure resource with role-based access control and built-in tracing.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    The key capability for our scenario is the <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/tool-catalog">Foundry Agent Service tool catalog</a>, which includes a native <strong>Azure Functions</strong> built-in tool. This means a Foundry agent can call your existing Azure Function directly — no new API layer needed. The agent decides when to call it based on its instructions and the incoming signal data.
+                </p>
+
+                <h2>Creating a Foundry Agent with the Azure Functions Tool</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Start by creating a Foundry resource in the <a href="https://ai.azure.com/">Microsoft Foundry portal</a>. Create a new project, then navigate to <strong>Build → Agents</strong> and click <strong>New agent</strong>. Choose <code>gpt-4.1</code> or <code>gpt-4.1-mini</code> as the model — the mini variant is fast and cost-effective for this kind of structured decision task.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Give the agent a system prompt that describes its role as a trade validator. A starting point: <em>"You are a cautious trading assistant. You receive trade signals containing a symbol, side (BUY/SELL), price, and total. Before placing an order, use the web search tool to check if there is any breaking news or unusual volatility for the symbol. If conditions look normal, call the place_order function. If risk is elevated, respond with a brief explanation of why the trade was suppressed."</em>
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Next, add two tools to the agent: <strong>Web Search</strong> (a built-in tool — toggle it on in the Tools panel) and your Azure Function via the <strong>Azure Functions</strong> built-in tool. For the Azure Functions tool, provide the function app resource ID and select the <code>http_bnb_limit_order</code> function. Foundry handles authentication through your project's managed identity, so no API keys are passed in the prompt.
+                </p>
+
+                <h2>Wiring Foundry Into the Trading Pipeline</h2>
+
+                <p class="pw-post-body-paragraph">
+                    With the agent configured, update your TradingView webhook URL. Instead of pointing directly at the Azure Function, point it at a new thin HTTP trigger in the same Function App — call it <code>http_signal_intake</code>. This intake function receives the TradingView JSON payload and forwards it to the Foundry agent using the <a href="https://learn.microsoft.com/en-us/azure/foundry/quickstarts/get-started-code">Microsoft Foundry Python SDK</a>.
+                </p>
+
+                <pre>
+import os
+import azure.functions as func
+from azure.identity import DefaultAzureCredential
+from azure.ai.projects import AIProjectClient
+
+app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
+
+PROJECT_ENDPOINT = os.environ["FOUNDRY_PROJECT_ENDPOINT"]
+AGENT_NAME       = os.environ["FOUNDRY_AGENT_NAME"]
+
+@app.route(route="http_signal_intake")
+async def http_signal_intake(req: func.HttpRequest) -> func.HttpResponse:
+    body = req.get_json()
+    if body is None:
+        return func.HttpResponse("Invalid JSON", status_code=400)
+
+    project = AIProjectClient(
+        endpoint=PROJECT_ENDPOINT,
+        credential=DefaultAzureCredential(),
+    )
+    openai = project.get_openai_client()
+
+    user_message = (
+        f"New trade signal received: symbol={body['symbol']}, "
+        f"side={body['side']}, price={body['price']}, total={body['total']}. "
+        "Validate and place the order if conditions are suitable."
+    )
+
+    response = openai.responses.create(
+        extra_body={"agent_reference": {"name": AGENT_NAME, "type": "agent_reference"}},
+        input=user_message,
+    )
+
+    return func.HttpResponse(response.output_text, status_code=200)
+                </pre>
+
+                <p class="pw-post-body-paragraph">
+                    Add two new App Settings to your Function App: <code>FOUNDRY_PROJECT_ENDPOINT</code> (formatted as <code>https://&lt;resource-name&gt;.ai.azure.com/api/projects/&lt;project-name&gt;</code>) and <code>FOUNDRY_AGENT_NAME</code>. Enable a system-assigned managed identity on the Function App and grant it the <strong>Azure AI User</strong> role on the Foundry project. This allows <code>DefaultAzureCredential()</code> to authenticate without any stored secrets.
+                </p>
+
+                <h2>The Complete Autonomous Stack</h2>
+
+                <p class="pw-post-body-paragraph">
+                    The final architecture looks like this: TradingView fires a webhook → <code>http_signal_intake</code> receives it → the Foundry agent runs a web search for market context → the agent reasons about the signal → if approved, the agent calls <code>http_bnb_limit_order</code> → the order lands on Binance. Every agent decision is logged in Foundry's built-in tracing dashboard, giving you a complete audit trail of which signals were executed and which were suppressed and why.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    This architecture separates concerns cleanly: Pine Script handles chart analysis, Azure Functions handle exchange integration, and Microsoft Foundry handles judgement. Each layer can be improved independently — you can swap in a more aggressive model during bull markets, add a second agent for risk sizing, or hook in the <strong>Code Interpreter</strong> tool to run statistical checks on recent candle data before any order is placed.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    The platform is free to explore, and you only pay for model tokens consumed — GPT-4.1-mini costs a fraction of a cent per signal evaluation at typical prompt lengths. For a bot trading modest position sizes, the AI layer adds negligible cost while dramatically reducing the risk of entering bad trades during high-volatility, news-driven moves that a pure technical signal would miss entirely.
+                </p>
+
+                <h2>Wrapping Up the Series</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Across three parts we went from zero to a fully automated, AI-validated trading pipeline: Part 1 built and deployed the Azure Function with Binance order logic — Part 2 connected TradingView's Pine Script alerts to that function via webhooks — Part 3 inserted a Microsoft Foundry agent as an intelligent gatekeeper between the signal and the exchange. The full source code for the Azure Functions side lives in the <a href="https://github.com/c-wann/binance-tradingview-bot">binance-tradingview-bot GitHub repo</a>.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    From here, the natural next steps are adding a Telegram notification when the agent suppresses a trade (so you can review its reasoning), experimenting with different models for different market regimes, and exploring <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard">Foundry's continuous evaluation dashboard</a> to measure how often agent-validated signals outperform raw strategy signals over time.
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    <em>Disclaimer: This series is for educational purposes only and does not constitute financial advice. Always test thoroughly on Binance's testnet before deploying with real funds.</em>
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
