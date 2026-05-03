@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-04-17T15:30:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Multi-Agent Systems on Azure: How to Secure Identity, Monitoring, and Guardrails at Scale</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">Security concerns around AI agents are one of the primary reasons organizations stall at the experimentation phase. A single chatbot is manageable; a fleet of autonomous agents that coordinate with each other, call external APIs, and take actions on behalf of users introduces a threat surface that most enterprise security teams have never had to reason about before. Here is what that surface looks like — and how Microsoft Foundry addresses it.</p>
+
+                <h2>Agent Identity: The Foundation of Everything</h2>
+
+                <p class="pw-post-body-paragraph">In a multi-agent system, the first question security teams ask is "who is this agent, and what is it allowed to do?" Microsoft Foundry answers this by giving each agent a dedicated <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-identity">Microsoft Entra identity</a>. This is not a shared service principal or an API key stored in an environment variable — it's a managed identity scoped to a specific agent, enabling credential-free authentication to external resources and APIs without any secrets to rotate or leak.</p>
+
+                <p class="pw-post-body-paragraph">Agent identities integrate with Azure RBAC, meaning you can define exactly which resources each agent can access using standard Azure role assignments. An agent that reads from a SharePoint site doesn't need access to your blob storage or your database. The principle of least privilege becomes enforceable at the agent level, not just at the service level — a meaningful improvement over the credential-sharing approaches that many early agent implementations rely on.</p>
+
+                <h2>Network Isolation and Data Residency</h2>
+
+                <p class="pw-post-body-paragraph">Foundry Agent Service supports full virtual network isolation for prompt agents and workflow agents, keeping agent traffic off the public internet entirely. Hosted agents go further with a bring-your-own Virtual Network (BYO VNet) model where each session runs in a VM-isolated sandbox connected to your organization's VNet. This is critical for regulated industries where data residency and network segregation are non-negotiable compliance requirements.</p>
+
+                <p class="pw-post-body-paragraph">Private endpoints for dependent services — Azure AI Search, Azure Cosmos DB for conversation state, blob storage for files — complete the network isolation picture. Organizations with strict data handling requirements can route all agent data flows through their private network perimeter, with no data traversing the public internet between any component of the agent architecture.</p>
+
+                <h2>Cross-Agent Security: When Agents Talk to Each Other</h2>
+
+                <p class="pw-post-body-paragraph">Multi-agent architectures introduce a novel attack vector: cross-domain prompt injection attacks (XPIA), where malicious content embedded in data retrieved by one agent attempts to hijack the behavior of another. Foundry's integrated content safety filters are designed specifically to detect and mitigate XPIA at the model level — scanning tool outputs and external data before they're incorporated into agent reasoning.</p>
+
+                <p class="pw-post-body-paragraph">The Agent-to-Agent (A2A) protocol provides structured, authenticated communication between agents. Rather than chaining agents through unstructured message passing, A2A connections use <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/agent-to-agent">typed endpoints with authentication</a> that prevent unauthorized agents from inserting themselves into orchestration flows. Each agent in a multi-agent workflow operates under its own Entra identity, so audit logs can trace exactly which agent took which action and when.</p>
+
+                <h2>Continuous Monitoring Through Foundry Control Plane</h2>
+
+                <p class="pw-post-body-paragraph">Post-deployment, the security posture of a multi-agent system requires continuous monitoring, not just a one-time security review. <a href="https://learn.microsoft.com/en-us/azure/foundry/control-plane/overview">Foundry Control Plane</a> provides the fleet-level dashboard for this: it surfaces Microsoft Defender and Purview alerts for all agents in a subscription, tracks token usage anomalies that might indicate prompt injection or resource abuse, and enables scheduled automated red-teaming scans to detect safety drift over time.</p>
+
+                <p class="pw-post-body-paragraph">Continuous evaluation monitors risk dimensions including sensitive data leakage, prohibited actions, task adherence violations, and groundedness failures — automatically, without manual inspection. When an anomaly is detected, Control Plane provides direct links to trace data and evaluation results for rapid investigation. For bulk policy violations, the compliance pane enables remediation across all affected agents simultaneously, preventing a single misconfiguration from persisting unnoticed across a large agent fleet.</p>
+
+                <h2>The Security Maturity Curve for Agent Systems</h2>
+
+                <p class="pw-post-body-paragraph">Most organizations won't implement all of this at once. A practical security maturity curve starts with Entra-based agent identities (replacing service accounts and API keys), then adds virtual network isolation for production workloads, then implements continuous evaluation and automated red-teaming for compliance assurance. The Control Plane governance layer becomes essential as soon as you move beyond a handful of agents to a fleet that spans multiple teams.</p>
+
+                <p class="pw-post-body-paragraph">The key insight is that multi-agent security is not fundamentally different from traditional software security — it's the same principles of identity, isolation, least privilege, and monitoring applied to a new execution model. The Microsoft Foundry platform bets that enterprises are willing to invest in autonomous AI agents at scale precisely when those agents operate within a governance framework they already understand. The evidence from the 80,000-plus enterprises already building on Foundry suggests that bet is correct.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

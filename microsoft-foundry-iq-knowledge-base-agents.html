@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-02-11T10:30:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Foundry IQ: Give Your AI Agents a Knowledge Brain Built From Your Own Data</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">An AI agent is only as useful as the knowledge it can access. Without a connection to your proprietary data, even the most capable model is limited to its training cutoff — answering generic questions while staying blind to your internal documents, policies, and processes. Foundry IQ changes that by giving agents a managed, permission-aware knowledge layer built from your organization's own data sources.</p>
+
+                <h2>What Is Foundry IQ?</h2>
+
+                <p class="pw-post-body-paragraph"><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/what-is-foundry-iq">Foundry IQ</a> is a managed knowledge base service in Microsoft Foundry that connects agents to enterprise data across Azure Blob Storage, SharePoint, OneLake, and public web sources. Rather than building custom retrieval pipelines for each agent, you create a single knowledge base that multiple agents can share — and Foundry IQ handles all the complexity of indexing, chunking, embedding, and querying behind the scenes.</p>
+
+                <p class="pw-post-body-paragraph">The service is currently in public preview, powered by Azure AI Search for its underlying indexing and retrieval infrastructure. When an agent queries the knowledge base, Foundry IQ uses an agentic retrieval pipeline: it decomposes the user's question into subqueries, executes them in parallel, semantically reranks the results, and returns grounded answers with citations pointing back to the source documents.</p>
+
+                <h2>Agentic Retrieval: More Than Simple RAG</h2>
+
+                <p class="pw-post-body-paragraph">Traditional RAG (Retrieval-Augmented Generation) pipelines do a single vector search, grab the top-k chunks, and stuff them into a context window. Foundry IQ's agentic retrieval is more sophisticated. It uses a large language model — from Azure OpenAI in Foundry Models — as a query planner, breaking complex questions into parallel subqueries before searching. This means a question like "What changed in our refund policy since Q3 last year and how does it compare to competitor policies?" gets intelligently decomposed rather than reduced to a single embedding lookup.</p>
+
+                <p class="pw-post-body-paragraph">The retrieval reasoning effort is configurable at three levels: minimal, low, and medium. Higher effort means more LLM processing and better results for complex queries, at the cost of latency and token consumption. For high-throughput, simple lookup scenarios, minimal effort keeps costs in check while still leveraging the agentic architecture.</p>
+
+                <h2>Permission-Aware by Design</h2>
+
+                <p class="pw-post-body-paragraph">One of Foundry IQ's most important enterprise features is its access control enforcement. The knowledge base can synchronize access control lists (ACLs) from supported sources and honor Microsoft Purview sensitivity labels. At query time, Foundry IQ enforces permissions under the caller's Microsoft Entra identity — meaning agents return only content the requesting user is authorized to see. This is critical for multi-tenant or role-differentiated deployments where different users interacting with the same agent should get different results based on their permissions.</p>
+
+                <p class="pw-post-body-paragraph">This permission enforcement happens at retrieval time, not just at index time. You don't need separate knowledge bases for different user roles — a single Foundry IQ knowledge base handles permission-aware responses dynamically based on the authenticated user's identity.</p>
+
+                <h2>The IQ Ecosystem: Foundry, Fabric, and Work IQ</h2>
+
+                <p class="pw-post-body-paragraph">Foundry IQ is part of a broader Microsoft IQ strategy with three complementary workloads. <a href="https://learn.microsoft.com/en-us/fabric/iq/overview">Fabric IQ</a> is the semantic intelligence layer for Microsoft Fabric, connecting agents to analytics in OneLake and Power BI. Work IQ is the contextual intelligence layer for Microsoft 365, capturing signals from documents, meetings, chats, and workflows. Foundry IQ is the managed knowledge layer for enterprise data across Azure and SharePoint.</p>
+
+                <p class="pw-post-body-paragraph">These three workloads are standalone but composable. An agent could simultaneously query Foundry IQ for document knowledge, Fabric IQ for business metrics, and Work IQ for recent email context — giving it a remarkably complete picture of what's happening in your organization.</p>
+
+                <h2>Getting Started Without Writing Infrastructure Code</h2>
+
+                <p class="pw-post-body-paragraph">Setting up Foundry IQ requires no infrastructure code for a proof of concept. In the Foundry portal, you connect an Azure AI Search service that supports agentic retrieval, create a knowledge base by adding knowledge sources one at a time, and then connect the knowledge base to an existing agent. The portal playground lets you test queries immediately to verify retrieval quality before moving to code.</p>
+
+                <p class="pw-post-body-paragraph">For production deployments, the programmatic path uses managed identities and permission configurations appropriate for your security requirements. Scheduled indexer runs handle incremental data refresh automatically, so your knowledge base stays current without manual reindexing. The free tier of Azure AI Search plus Foundry's free token allocation for agentic retrieval makes it practical to prototype <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/foundry-iq-connect">before committing to production costs</a>.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

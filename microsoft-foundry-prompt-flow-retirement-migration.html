@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-03-04T11:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Prompt Flow Is Being Retired: Here's What You Need to Do Before April 2027</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">Microsoft has confirmed that Prompt Flow — the visual LLM pipeline authoring tool in Azure AI Foundry and Azure Machine Learning — will retire on April 20, 2027. If your team has been using Prompt Flow to orchestrate AI workflows, build evaluation pipelines, or manage deployments, the clock is running. Here's what the retirement means, what replaces it, and how to approach the migration.</p>
+
+                <h2>What Exactly Is Being Retired</h2>
+
+                <p class="pw-post-body-paragraph">According to the <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/prompt-flow-is-being-retired/4513587">official retirement announcement</a> published April 30, 2026, the retirement covers everything in the Prompt Flow product surface: the web authoring experience in Microsoft Foundry and Azure Machine Learning, the VS Code extensions for Prompt Flow, and the Prompt Flow base image used in deployments. After April 20, 2027, none of these components will be supported.</p>
+
+                <p class="pw-post-body-paragraph">During the deprecation period through that date, Prompt Flow will continue receiving security patches and critical bug fixes — but no new features will be added. This gives teams approximately one year to plan and execute their migration, which Microsoft characterizes as "a phased process that includes audit, rebuild, validation, operational migration, and cutover."</p>
+
+                <h2>The Recommended Replacement: Microsoft Agent Framework</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft's recommended path forward is <a href="https://learn.microsoft.com/en-us/agent-framework/overview/">Microsoft Agent Framework</a>, which reached general availability on April 3, 2026 for both Python and .NET. The framework is designed for production use with stable APIs and long-term support, covering both agents and multi-step workflow orchestration — the primary use cases that Prompt Flow served.</p>
+
+                <p class="pw-post-body-paragraph">Unlike Prompt Flow's visual DAG-based authoring, Agent Framework is code-first. This is a significant shift for teams that relied on Prompt Flow's low-code interface for building LLM pipelines. Microsoft is explicit that migration is not always like-for-like: "Customers should plan for migration as an application update, not just a platform switch." In cases where Prompt Flow was used heavily as a visual authoring experience, the migration may require redesigning the solution rather than a direct port.</p>
+
+                <h2>A Practical Migration Approach</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft recommends a phased approach. Start by auditing your current Prompt Flow usage across your organization — active applications, deployed endpoints, evaluation workflows, and any operational dependencies. This establishes the scope of migration and helps you prioritize the most critical workloads first. Then identify the appropriate migration target for each workflow, with Microsoft Agent Framework as the default recommendation for orchestration scenarios.</p>
+
+                <p class="pw-post-body-paragraph">The rebuild phase should include both reimplementing the application in Agent Framework and validating that the new implementation produces equivalent outputs. Side-by-side validation is particularly important if Prompt Flow was running production-critical evaluation pipelines where subtle behavioral differences could affect quality metrics. Microsoft has published a <a href="https://aka.ms/PFtoMAFMigration">migration guide</a> and <a href="https://aka.ms/PFMigrationCodeSamples">code samples</a> specifically for this transition.</p>
+
+                <h2>What Microsoft Agent Framework Offers</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft Agent Framework provides the foundational building blocks for production AI applications: structured agent definitions, multi-step workflow support, tool integration patterns, and observability hooks. It's the same framework powering Foundry Agent Service's hosted agents — which means workflows built with it can be deployed directly to Foundry's managed runtime without additional infrastructure work.</p>
+
+                <p class="pw-post-body-paragraph">The framework integrates natively with the broader Foundry ecosystem: model deployments via Foundry Models, observability through Application Insights and agent tracing, and publishing directly to Microsoft 365 Copilot and Teams. For teams that have been building evaluation pipelines in Prompt Flow, the evaluation capabilities in Foundry's observability layer — continuous evaluation, risk and safety evaluators, and the AI Red Teaming Agent — cover the same ground in a more integrated and scalable way.</p>
+
+                <h2>The Strategic Signal Behind the Retirement</h2>
+
+                <p class="pw-post-body-paragraph">Prompt Flow was introduced as a way to make LLM pipeline development accessible without deep coding knowledge. Its retirement signals a strategic shift: the AI development stack has matured to the point where code-first frameworks offer better maintainability, testability, and production reliability than visual DAG editors. Agent Framework GA, Foundry Agent Service's three agent types, and the full Control Plane governance layer represent Microsoft's production AI platform as it now stands.</p>
+
+                <p class="pw-post-body-paragraph">For teams using Prompt Flow for evaluation and safety testing specifically, it's worth reviewing the current state of <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/risk-safety-evaluators">Foundry's built-in evaluators</a> before the migration — they cover groundedness, safety, task adherence, and agentic risk categories that Prompt Flow's evaluation tooling was only beginning to support.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

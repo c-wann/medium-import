@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-03-17T08:30:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>DeepSeek V4 Flash and Pro Are Now in Microsoft Foundry — Here's Why That Matters</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">The AI model selection conversation used to be simple: pick the best model and use it everywhere. In 2026, that approach is both expensive and suboptimal. Microsoft's addition of DeepSeek V4 Flash and DeepSeek V4 Pro to the Foundry model catalog is a direct response to this shift — giving teams two purpose-built options that work together to balance reasoning quality, speed, and cost at production scale.</p>
+
+                <h2>Two Models, Two Jobs</h2>
+
+                <p class="pw-post-body-paragraph">DeepSeek V4 Pro is built for depth. According to the <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-deepseek-v4-flash-and-v4-pro-in-microsoft-foundry/4515174">official announcement from Microsoft</a>, it's designed for multi-step reasoning and analysis, complex coding and debugging workflows, long-document synthesis, and agentic workflows requiring planning and decision-making. These are the "high-stakes" workloads where output quality matters more than response time.</p>
+
+                <p class="pw-post-body-paragraph">DeepSeek V4 Flash is built for speed. It targets chat and conversational experiences, high-volume content generation, classification and extraction pipelines, and real-time copilot interactions. The hallmark benefits are fast response times, cost efficiency at scale, and optimization for high-concurrency production loads where you're processing thousands of requests simultaneously rather than a handful of complex analytical tasks.</p>
+
+                <h2>The Model Routing Opportunity</h2>
+
+                <p class="pw-post-body-paragraph">The real power of having both models in the same platform isn't choosing one over the other — it's using them together. A production-grade AI system can route simple, high-volume interactions to DeepSeek V4 Flash while sending complex queries that require deeper reasoning to V4 Pro. This pattern — intelligent model routing — dramatically changes the economics of enterprise AI. You pay premium prices only for the subset of requests that actually need premium reasoning capability.</p>
+
+                <p class="pw-post-body-paragraph">Microsoft Foundry's model routing infrastructure makes this pattern practical. Both models share a single API endpoint and consistent interface, so switching between them is a configuration change, not a rewrite. The platform also supports evaluation and comparison using your own datasets, letting you empirically validate quality thresholds before setting routing rules. DeepSeek V4 Flash is available now at $1.03 per million input tokens and $4.12 per million output tokens; V4 Pro pricing is forthcoming.</p>
+
+                <h2>Enterprise Controls Come Standard</h2>
+
+                <p class="pw-post-body-paragraph">DeepSeek models in Foundry inherit the platform's enterprise-grade infrastructure. Content safety filters and governance controls apply automatically — organizations don't need to configure safety layers separately or trust the model provider's filtering alone. Built-in observability tracks usage, latency, and cost per model, making it straightforward to analyze the ROI of routing decisions over time.</p>
+
+                <p class="pw-post-body-paragraph">This is particularly important for organizations with compliance requirements around AI model usage. Deploying DeepSeek through Foundry means the data handling, network isolation, and audit logging capabilities you've already configured for your Foundry environment apply to DeepSeek as they would to any other model in the catalog. You're not adding a new vendor relationship — you're adding models to an already-governed platform.</p>
+
+                <h2>The Broader Trend: Model Portfolio Thinking</h2>
+
+                <p class="pw-post-body-paragraph">The arrival of DeepSeek V4 Flash and Pro is part of a broader trend in the Foundry model catalog, which now contains over 11,000 models from Microsoft, Anthropic, Meta, Mistral, Cohere, and dozens of other providers. The catalog includes Claude Sonnet and Opus series from Anthropic, Llama 4 Scout from Meta, Phi-4 multimodal from Microsoft, and specialized models like Nixtla's TimeGEN-1 for time series forecasting.</p>
+
+                <p class="pw-post-body-paragraph">The strategic implication is clear: production AI systems in 2026 are model portfolios, not single-model deployments. A well-designed system might use a fast, cheap model for triage, a mid-tier model for standard tasks, and a frontier model for complex reasoning — all within the same application. Microsoft Foundry's unified catalog, shared API interface, and routing infrastructure are designed precisely for this multi-model world. DeepSeek V4 Flash and Pro are the latest addition to that portfolio, and they arrive with <a href="https://ai.azure.com/catalog/models/DeepSeek-V4-Flash">immediate availability in the model catalog</a>.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

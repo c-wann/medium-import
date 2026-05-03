@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-02-23T16:45:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Foundry Control Plane: How to Govern an Entire AI Agent Fleet From One Dashboard</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">Running one AI agent in production is manageable. Running fifty — spread across a dozen teams, multiple Azure projects, and a mix of in-house and third-party frameworks — is something else entirely. Foundry Control Plane is Microsoft's answer to the fleet management problem: a unified interface that gives enterprise administrators visibility, governance, and control over every agent, model, and tool in their organization.</p>
+
+                <h2>Why Fleet Management Matters Now</h2>
+
+                <p class="pw-post-body-paragraph">According to <a href="https://learn.microsoft.com/en-us/azure/foundry/control-plane/overview">the Foundry Control Plane documentation</a>, the platform was built for organizations making the transition from isolated copilots to autonomous multi-agent fleets. Without centralized oversight, teams end up managing agents through individual Azure portal blades and separate per-project views — a fragmented approach that makes cross-team compliance enforcement and cost tracking nearly impossible.</p>
+
+                <p class="pw-post-body-paragraph">Foundry Control Plane integrates with Microsoft Defender, Microsoft Purview, and Microsoft Entra to bring security, data governance, and identity management together in a single role-aware interface. The platform doesn't just observe your agents — it enforces policies, tracks costs, and enables bulk remediation when issues are found.</p>
+
+                <h2>What You Can See: The Overview and Assets Panes</h2>
+
+                <p class="pw-post-body-paragraph">The Control Plane surfaces through the Foundry portal by selecting "Operate" in the upper-right toolbar. The Overview pane presents a high-level snapshot: active agents, cost trends, run completion rates, and prevented behaviors — all in trend-based health scores that highlight anomalies before they become incidents. Administrators can drill into specific alerts or cost spikes with direct links to detailed inventory or policy views.</p>
+
+                <p class="pw-post-body-paragraph">The Assets pane provides a unified, searchable table of every agent, model, and tool across projects within a subscription. You can filter and sort by version, tags, health score, cost, alerts, and token usage. Inline recommendations surface automatically — suggestions to refine prompts, upgrade model versions, or optimize configurations based on performance signals. From any entry, you can drill directly into evaluation or monitoring tabs for pre-deployment and post-deployment insights.</p>
+
+                <h2>Compliance and Security at Scale</h2>
+
+                <p class="pw-post-body-paragraph">The Compliance pane is where enterprise governance becomes concrete. Administrators define guardrail policies using deep integrations with Azure Policy, Microsoft Defender, and Microsoft Purview. Policies are versioned and assigned with full auditability, so every change to safety or compliance requirements is tracked. Noncompliant assets surface in real time, and bulk remediation lets you correct configurations across the entire fleet without visiting each agent individually.</p>
+
+                <p class="pw-post-body-paragraph">Security monitoring runs continuously. Foundry Control Plane surfaces Defender and Purview alerts directly on its dashboard, tracks rate limits and token usage for anomaly detection, and schedules automated red-teaming scans through integration with the <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/ai-red-teaming-agent">AI Red Teaming Agent</a>. The continuous evaluation capability monitors agent performance, quality, and risk dimensions — including groundedness, sensitive data leakage, and exposure to cross-domain prompt injection attacks — automatically, without manual intervention.</p>
+
+                <h2>Quota and Admin: The Operational Layer</h2>
+
+                <p class="pw-post-body-paragraph">The Quota pane shows model deployments and their consumption patterns side by side. By default it shows only models with active deployments; a toggle reveals all available models and regions, including ones you haven't deployed yet. This makes capacity planning for new deployments significantly easier — you can check regional availability before committing to a deployment configuration.</p>
+
+                <p class="pw-post-body-paragraph">The Admin pane extends the view beyond individual projects to the full subscription or tenant. Administrators can add or remove users from projects, attach or manage connected Azure resources, assign access at parent scope for consistent permissions inheritance, and view compliance posture for every project at a glance. This is the operational layer that makes it practical to run AI at enterprise scale without constant per-project administration.</p>
+
+                <h2>Multi-Platform Agent Support</h2>
+
+                <p class="pw-post-body-paragraph">Foundry Control Plane isn't limited to agents built natively in Foundry. It supports agents from multiple platforms, including non-Foundry and non-Microsoft sources, through <a href="https://learn.microsoft.com/en-us/azure/foundry/control-plane/how-to-manage-agents">a registration mechanism</a> that lets external agents join the fleet registry. This is a forward-looking capability — as organizations accumulate agents built with LangGraph, AutoGen, or other frameworks, Control Plane gives them a single governance layer without requiring migration to a specific runtime.</p>
+
+                <p class="pw-post-body-paragraph">The shift from building AI to governing AI is one of the defining challenges of enterprise AI adoption in 2026. Foundry Control Plane is Microsoft's clearest statement that production AI requires fleet-level observability and control — and that the platform responsible for building agents should also be the platform for running them safely at scale.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

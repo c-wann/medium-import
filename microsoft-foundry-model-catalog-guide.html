@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-04-28T09:45:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Inside the Microsoft Foundry Model Catalog: 1,900+ Models and How to Choose the Right One</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">Choosing an AI model used to require picking from a handful of providers and hoping the one you chose was good enough for your use case. The Microsoft Foundry Model Catalog eliminates that constraint. With over 1,900 models spanning foundation models, reasoning models, small language models, multimodal models, domain-specific models, and industry models, the catalog has become the most comprehensive AI model marketplace inside any enterprise cloud platform. The challenge is no longer finding a model — it's knowing how to find the right one.</p>
+
+                <h2>Two Categories That Matter for Enterprise Buyers</h2>
+
+                <p class="pw-post-body-paragraph">The Foundry <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/foundry-models-overview">model catalog</a> divides its inventory into two distinct categories, and understanding the difference shapes how you handle procurement, support, and compliance. Models sold directly by Azure — including the Azure OpenAI series (GPT-4.1, GPT-5.4, o-series reasoning models) and Microsoft's own Phi series — come with enterprise SLAs backed by Microsoft, deep Azure infrastructure integration, internal review against Microsoft's Responsible AI standards, and first-party billing. Provisioned throughput is also fungible for Azure Direct models, meaning quota reservations can be shifted between models as workloads evolve.</p>
+
+                <p class="pw-post-body-paragraph">Models from partners and community constitute the vast majority of catalog entries. They include Anthropic's Claude family (up to Claude Opus 4.6 and Sonnet 4.6 with one-million-token context windows), Meta Llama, Mistral, Cohere, NVIDIA Nemotron, DeepSeek, Fireworks AI, and hundreds of Hugging Face open models. These are deployed to Microsoft-managed Azure infrastructure for serverless inference or your own compute for managed deployments — but support and licensing flow through the respective providers, not Microsoft. Billing for partner models runs through Azure Marketplace.</p>
+
+                <h2>Finding Your Model: Filters, Benchmarks, and Leaderboards</h2>
+
+                <p class="pw-post-body-paragraph">The catalog portal provides structured filters that meaningfully narrow the field. You can filter by collection (provider family), industry (healthcare, legal, finance, or general-purpose), capabilities (reasoning, tool calling, vision, embeddings, audio), and inference task type (text generation, classification, translation, summarization, and more). Each model card provides at-a-glance quick facts, detailed versioning and data type information, a Benchmarks tab with performance metrics for select models, a Deployments tab showing existing endpoints in your subscription, and a License tab for legal review.</p>
+
+                <p class="pw-post-body-paragraph">The model performance leaderboard and side-by-side comparison feature deserve particular attention for teams doing structured model evaluations. Rather than running custom benchmark suites from scratch, the built-in Compare Models capability lets you evaluate candidate models on standardized metrics directly in the portal before committing to deployment. Organizations with specific performance requirements — latency, accuracy on domain-specific tasks, cost per token — can use these tools to make defensible, data-driven model selection decisions rather than relying on vendor marketing.</p>
+
+                <h2>Deployment Models: Pay-per-Token vs Dedicated Compute</h2>
+
+                <p class="pw-post-body-paragraph">Foundry supports two deployment paths with different cost and isolation profiles. Serverless deployments provide API access to Microsoft-hosted model infrastructure billed per input and output token — ideal for variable workloads or when exploring multiple models in parallel. Managed compute deployments provision dedicated virtual machines for a model, billed by core-hours regardless of usage — suited for high-volume production workloads with predictable throughput requirements or for models that must run in your network perimeter.</p>
+
+                <p class="pw-post-body-paragraph">Within serverless deployments, several sub-types address different compliance requirements: Global Standard routes traffic globally for maximum availability; Data Zone Standard keeps data within a geographic boundary (EU or US); Regional deployments confine inference to a specific Azure region. Global Batch and Data Zone Batch offer asynchronous processing for large workloads at reduced cost. The right combination depends on your latency tolerance, data residency requirements, and budget model.</p>
+
+                <h2>Fine-Tuning and Model Lifecycle Management</h2>
+
+                <p class="pw-post-body-paragraph">Select models in the catalog support fine-tuning via either managed compute or serverless paths, enabling organizations to adapt foundation models to proprietary terminology, specialized tasks, or domain-specific reasoning patterns. This is separate from the Reinforcement Fine-Tuning (RFT) capabilities available for Azure OpenAI models through the Foundry fine-tuning portal, which supports custom reward signals and o4-mini global training.</p>
+
+                <p class="pw-post-body-paragraph">Model lifecycle is an under-appreciated operational concern at catalog scale. Foundry tracks deprecation and retirement timelines for all models, provides notification before retirement, and documents suggested replacement models. Some models support automatic version updates, while others require explicit migration. For teams running production workloads, the <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/model-lifecycle-retirement">model retirement calendar</a> is a practical governance tool — one worth integrating into your team's quarterly planning cycle rather than discovering a model is retired when a production agent stops responding.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

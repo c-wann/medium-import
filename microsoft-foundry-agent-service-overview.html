@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-01-26T09:15:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Microsoft Foundry Agent Service: Everything You Need to Build, Deploy, and Scale AI Agents</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">Most AI prototypes die in the gap between "it worked in the playground" and "it's running in production." Microsoft Foundry Agent Service was designed to close that gap — a fully managed platform that takes your agent from first prompt to enterprise-grade deployment without you managing a single server.</p>
+
+                <h2>What Is an Agent, Really?</h2>
+
+                <p class="pw-post-body-paragraph">In <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/overview">Microsoft Foundry's definition</a>, an agent is more than a chatbot. It combines three components: a model from the Foundry catalog for reasoning, instructions that define goals and constraints, and tools that provide access to data or external systems. Unlike a simple text-completion endpoint, an agent can call APIs, search files, write and execute code, and chain multiple steps autonomously to complete a task.</p>
+
+                <p class="pw-post-body-paragraph">This architecture shift is significant. You're no longer building prompt pipelines — you're building systems that act. Agent Service handles the orchestration, memory between turns, tool invocation, and retry logic so you don't have to wire that yourself.</p>
+
+                <h2>Three Agent Types for Every Scenario</h2>
+
+                <p class="pw-post-body-paragraph">Foundry Agent Service offers three distinct agent types. Prompt agents require no code at all — you configure instructions, select a model, add tools, and Agent Service handles everything. They're ideal for rapid prototyping and internal tools, and you can create one in the Foundry portal in minutes.</p>
+
+                <p class="pw-post-body-paragraph">Workflow agents (currently in preview) let you orchestrate multi-step processes and coordinate multiple agents using declarative YAML definitions or a visual builder in the portal. They support branching logic, human-in-the-loop approval steps, and sequential or group-chat patterns — perfect for complex business automation.</p>
+
+                <p class="pw-post-body-paragraph">Hosted agents give you full control. You write the orchestration logic using any framework — Microsoft Agent Framework, LangGraph, or your own code — and Foundry deploys it as a container, managing the runtime, scaling, and infrastructure. This is the path for teams building sophisticated multi-agent systems or custom tool integrations.</p>
+
+                <h2>Built-In Tools That Actually Save Time</h2>
+
+                <p class="pw-post-body-paragraph">One of Foundry Agent Service's most practical features is its tool catalog. Agents can use built-in tools like web search, file search, memory, and code interpreter without you building any supporting infrastructure. The new Toolbox feature (preview) lets you define a curated set of tools once, manage them centrally, and expose them through a single <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/toolbox">MCP-compatible endpoint</a> — meaning any MCP-compatible agent runtime can consume the same toolbox.</p>
+
+                <p class="pw-post-body-paragraph">MCP (Model Context Protocol) support is a standout addition. You can connect remote MCP servers — including custom ones hosted on Azure Functions — directly from the Add Tools catalog in the portal. Authentication options include key-based access, Microsoft Entra managed identity, and OAuth On-Behalf-Of passthrough for user-delegated permissions.</p>
+
+                <h2>The Full Development Lifecycle in One Platform</h2>
+
+                <p class="pw-post-body-paragraph">Agent Service covers the entire build-test-deploy-monitor workflow. You create an agent, test it in the agents playground where MCP integrations can be exercised via chat, then inspect every model call and tool invocation with <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/concepts/trace-agent-concept">agent tracing</a>. From there you run evaluations to measure quality, publish the agent to a managed resource with a stable endpoint, and monitor it with service metrics dashboards.</p>
+
+                <p class="pw-post-body-paragraph">Versioning is automatic — as you iterate, snapshots are created so you can roll back to any prior version. Once published, agents can be distributed directly through Microsoft 365 Copilot and Teams, or accessed programmatically via the OpenResponses and Activity Protocols.</p>
+
+                <h2>Enterprise Security Built In From Day One</h2>
+
+                <p class="pw-post-body-paragraph">Every agent deployed on Foundry Agent Service gets enterprise-grade security by default. Each agent can have a dedicated Microsoft Entra identity for scoped, credential-free access to resources and APIs. Network isolation is supported through Azure virtual networks, and hosted agents support bring-your-own VNet with VM-isolated sandboxes per session. Role-based access control governs who can create, invoke, and manage agents.</p>
+
+                <p class="pw-post-body-paragraph">Content safety filters are integrated to mitigate prompt injection risks including cross-prompt injection attacks (XPIA). For organizations with specific compliance requirements, you can bring your own Azure resources — storage, Azure AI Search, Azure Cosmos DB — for conversation state, ensuring data residency and operational control.</p>
+
+                <h2>Agent Manifests: Start from a Proven Blueprint</h2>
+
+                <p class="pw-post-body-paragraph">If you're not starting from scratch, Agent Service offers <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-catalog">agent manifests</a> — pre-built configurations combining tested instructions, tool setups, and interaction patterns for common enterprise workflows. Browse by industry, tool type, or complexity, deploy with one click, then customize from there.</p>
+
+                <p class="pw-post-body-paragraph">Foundry Agent Service represents a significant maturation of the AI development stack. The combination of no-code prompt agents, YAML workflow orchestration, and custom hosted containers — all on a single managed platform with enterprise security and full observability — means teams can move from experimentation to production without rebuilding their architecture. Whether you're building your first AI agent or scaling a fleet of them, this is the platform designed to take you there.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

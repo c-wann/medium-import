@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-03-29T13:15:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>AI Red Teaming Agent: Automate Safety Testing for Your Foundry AI Systems</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">Manual AI red teaming is exhausting, slow, and expensive. Finding the edge cases where an AI system produces harmful, biased, or misleading output requires creativity, domain expertise, and hours of adversarial probing — a bottleneck that slows AI adoption at exactly the moment organizations need to move faster. The AI Red Teaming Agent in Microsoft Foundry automates that process at scale, applying Microsoft's red team expertise to your models and agents without requiring specialized security staff.</p>
+
+                <h2>What the AI Red Teaming Agent Does</h2>
+
+                <p class="pw-post-body-paragraph">The <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/ai-red-teaming-agent">AI Red Teaming Agent</a> combines Microsoft's open-source PyRIT (Python Risk Identification Tool) framework with Foundry's Risk and Safety Evaluations to automate three things: scanning your AI endpoints for content risks by simulating adversarial probing, evaluating each attack-response pair to generate metrics like Attack Success Rate (ASR), and producing a scorecard of results that can be logged, monitored, and tracked over time in Foundry.</p>
+
+                <p class="pw-post-body-paragraph">The key metric — Attack Success Rate — measures what percentage of adversarial prompts successfully elicited harmful or unsafe responses from the model. A low ASR indicates a robust safety posture; a high ASR flags specific risk categories or attack vectors that need mitigation before deployment. Results are redacted when shown to developers to prevent unnecessary exposure to harmful content.</p>
+
+                <h2>How Adversarial Probing Works</h2>
+
+                <p class="pw-post-body-paragraph">Direct adversarial prompting — simply asking a model to do something harmful — is often caught by existing safety alignment. The Red Teaming Agent goes further by applying attack strategies from PyRIT that transform prompts to bypass these safeguards. The catalog includes over 20 attack types: Base64 encoding, Caesar cipher, character swapping, Leetspeak, ANSI escape sequences, Unicode confusable characters, ROT13, Morse code, URL encoding, jailbreak injections, and more nuanced multi-turn attacks like Crescendo, which gradually escalates prompt complexity across conversation turns.</p>
+
+                <p class="pw-post-body-paragraph">Each of these strategies exploits a different failure mode in safety filters. A model that refuses "tell me how to make a weapon" might comply when the same request arrives as Base64-encoded text or through a Crescendo sequence that builds up context incrementally. By systematically applying all these strategies against all supported risk categories, the Red Teaming Agent surfaces vulnerabilities that manual testers would likely miss.</p>
+
+                <h2>Agent-Specific Risk Categories</h2>
+
+                <p class="pw-post-body-paragraph">For AI agents specifically, the Red Teaming Agent tests risks that don't exist in simple chat completion scenarios. Sensitive data leakage tests probe whether agents will divulge financial data, personal identifiers, or health information from internal knowledge bases and tool calls. Prohibited actions testing probes whether agents can be manipulated into executing banned behaviors — things like facial recognition, emotion inference, financial transactions without authorization, or irreversible file deletions.</p>
+
+                <p class="pw-post-body-paragraph">Task adherence testing evaluates whether agents faithfully follow instructions under adversarial pressure — checking goal achievement, rule compliance, and procedural discipline simultaneously. Indirect prompt injection attacks (XPIA) test whether malicious content hidden in tool outputs or external data sources can hijack agent behavior, a risk unique to agentic systems that call external APIs or search internal databases. These agentic risk categories are only available in cloud red-teaming to provide a minimally sandboxed environment.</p>
+
+                <h2>When to Run Red Teaming</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft frames the AI Red Teaming Agent using NIST's AI risk framework: Govern, Map, Measure, Manage. The tool addresses the "Measure" phase — evaluating risks at scale — and supports use across the full development lifecycle. During model selection, you can run comparative scans to identify which base model has the safest profile for your use case. During development, scans catch regressions when you update prompts or upgrade model versions. Before deployment, a final red-teaming run establishes a safety baseline. Post-deployment, <a href="https://learn.microsoft.com/en-us/azure/foundry/control-plane/overview">Foundry Control Plane</a> can schedule continuous automated scans to detect drift in safety posture over time.</p>
+
+                <p class="pw-post-body-paragraph">The shift-left philosophy here is economically significant. Catching a safety issue through automated red-teaming in pre-deployment costs a fraction of a production incident response. Microsoft's own experience red-teaming 100 generative AI products found that systematic automated scanning consistently surfaces risks that manual testing misses, particularly in edge-case combinations of attack strategy and risk category. For organizations looking to deploy AI responsibly without building a dedicated red team, the AI Red Teaming Agent provides a scalable path to that same rigor.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

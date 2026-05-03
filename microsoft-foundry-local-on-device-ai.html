@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-02-03T14:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Foundry Local: Run AI Models On Your Device for Free — No Azure Required</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">Cloud AI has a dirty secret: every inference call costs money and adds latency. For developers building prototypes, offline applications, or privacy-sensitive tools, those constraints add up fast. Foundry Local changes the equation entirely — it brings Microsoft's production-grade AI infrastructure to your laptop, with zero cloud dependency and no Azure subscription required.</p>
+
+                <h2>What Is Foundry Local?</h2>
+
+                <p class="pw-post-body-paragraph"><a href="https://learn.microsoft.com/en-us/azure/foundry-local/get-started">Foundry Local</a> is the on-device counterpart to cloud-hosted Microsoft Foundry. It lets you download AI models to your local machine, run inference entirely offline, and integrate them into applications using the same API patterns you'd use with Azure. There are no per-token costs, no network round trips, and no data leaving your device.</p>
+
+                <p class="pw-post-body-paragraph">The SDK supports Python, JavaScript, C#, and Rust. On Windows, it integrates directly with the Windows ML runtime, unlocking a wider range of hardware acceleration options across CPUs, GPUs, and NPUs. The cross-platform version works on macOS and Linux as well, giving developers consistent tooling regardless of their operating system.</p>
+
+                <h2>How It Works: Execution Providers and Model Catalog</h2>
+
+                <p class="pw-post-body-paragraph">Foundry Local uses the concept of execution providers (EPs) — hardware-optimized runtimes that accelerate model inference on specific silicon. When you initialize the SDK, it discovers available execution providers on your machine, downloads and registers the appropriate ones, then loads your chosen model. The download is a one-time operation; once an EP is registered, it only needs updating when a new version ships.</p>
+
+                <p class="pw-post-body-paragraph">The model catalog includes compact but capable models like <a href="https://learn.microsoft.com/en-us/azure/foundry-local/how-to/how-to-compile-hugging-face-models">Qwen2.5-0.5B</a> that run efficiently on consumer hardware. You can also compile HuggingFace models for local use, extending the catalog beyond what ships out of the box. For production-tier models that exceed local resources, the same Foundry SDK patterns carry over to cloud deployments — same API, same code structure.</p>
+
+                <h2>A Practical Code Example</h2>
+
+                <p class="pw-post-body-paragraph">Getting started requires just a few lines. After installing the SDK, you create a <code>FoundryLocalManager</code>, call <code>downloadAndRegisterEps()</code> to prepare hardware acceleration, then get a model from the catalog, download it, load it, and create a chat client. The chat client exposes both synchronous and streaming completion APIs that mirror the cloud inference interface exactly.</p>
+
+                <p class="pw-post-body-paragraph">Streaming is first-class: the <code>completeStreamingChat()</code> method returns an async iterator that yields chunks as the model generates them, giving you responsive output without waiting for full completions. Unloading a model when finished frees memory, making it practical to load different models across a session without restarting your application.</p>
+
+                <h2>When to Use Foundry Local</h2>
+
+                <p class="pw-post-body-paragraph">The most compelling use cases for Foundry Local fall into a few categories. Privacy-first applications — medical tools, legal document analysis, code assistants in air-gapped environments — benefit from the guarantee that data never leaves the device. Offline-capable applications like field tools, kiosks, or mobile-adjacent workflows gain resilience against connectivity failures. And for developers, local inference dramatically shortens the feedback loop during development without running up token costs.</p>
+
+                <p class="pw-post-body-paragraph">The performance ceiling is real: you're limited by local RAM and the capabilities of available models. But for many tasks — summarization, classification, extraction, conversational assistance — compact quantized models are more than sufficient, and the zero-cost, zero-latency advantage is hard to argue with.</p>
+
+                <h2>The Bigger Picture: A Continuum From Edge to Cloud</h2>
+
+                <p class="pw-post-body-paragraph">What makes Foundry Local strategically interesting is its continuity with cloud Foundry. The same SDK patterns, the same model catalog conventions, and the same API shapes mean you can prototype locally and graduate to cloud deployments without a rewrite. As hardware improves and models get more efficient, the dividing line between edge and cloud inference will keep shifting — and Foundry Local is positioned to move with it.</p>
+
+                <p class="pw-post-body-paragraph">The project is open source and available on <a href="https://github.com/microsoft/Foundry-Local">GitHub</a>, with samples for every supported language and guidance on compiling custom HuggingFace models. For developers who have been waiting for a production-quality local inference runtime that doesn't require standing up a container or managing ONNX sessions manually, Foundry Local is worth a serious look.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>
