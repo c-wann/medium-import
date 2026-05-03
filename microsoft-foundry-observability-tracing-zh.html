@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-02-28T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Microsoft Foundry 可觀察性：用 OpenTelemetry 追蹤 AI 代理人的每一步</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    AI 代理人在生產環境中失控並不罕見——它可能無限循環呼叫工具、消耗幾倍預期的 token、或是在某個不起眼的工具呼叫失敗後靜默地給出錯誤答案。要在這些問題影響用戶之前發現它們，你需要的不是「日誌」，而是<strong>完整的 AI 可觀察性（AI Observability）</strong>。<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/concepts/trace-agent-concept">Microsoft Foundry</a> 基於 <strong>OpenTelemetry</strong> 標準，提供從單次工具呼叫到多代理人協作的完整追蹤能力。
+                </p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/observability/tracing-overview.png" alt="Foundry 追蹤架構圖，展示代理人追蹤的 Trace、Span 層次結構，以及如何在 Foundry Portal 和 Application Insights 查看" />
+                    <figcaption>Foundry 追蹤架構：每次代理人執行產生一個 Trace，由多個巢狀 Span 組成，每個 Span 記錄開始/結束時間、屬性（輸入/輸出/工具名稱）和事件。追蹤資料同時顯示在 Foundry Portal 和 Azure Monitor Application Insights。</figcaption>
+                </figure>
+
+                <h2>為什麼 AI 代理人特別難以偵錯？</h2>
+
+                <p class="pw-post-body-paragraph">
+                    與傳統軟體不同，AI 代理人的執行路徑是動態的：同一個問題在不同時刻可能走完全不同的工具呼叫序列。代理人可能巢狀呼叫子代理人，每個子代理人又呼叫工具，形成多層的呼叫樹狀結構。當最終輸出出問題時，光看輸入和輸出根本看不出問題在哪一層。這就是追蹤（Tracing）的用武之地：它讓你看到代理人的<strong>完整執行歷程</strong>，每個步驟的輸入/輸出、耗時、token 用量，都清晰呈現。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Foundry 的追蹤基於 <strong>OpenTelemetry（OTel）</strong>標準，這確保了追蹤資料的格式和語義在跨工具、跨平台的情況下保持一致。無論您的代理人是用 Foundry SDK、LangChain、LangGraph，還是 OpenAI Agents SDK 建立的，Foundry 都能自動收集標準化的追蹤資料。
+                </p>
+
+                <h2>核心概念：Trace、Span、Attribute</h2>
+
+                <p class="pw-post-body-paragraph">
+                    理解三個基本概念：<strong>Trace（追蹤）</strong>是一次代理人執行的完整記錄，代表從用戶輸入到最終回覆的整個旅程。<strong>Span（跨度）</strong>是 Trace 的最小單位，代表一個具體的操作，如「呼叫 Bing Search」或「執行 Python 程式碼」，每個 Span 記錄開始/結束時間和輸入/輸出。多個 Span 以父子關係巢狀排列，反映代理人的呼叫樹。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    <strong>Attribute（屬性）</strong>是附加在 Trace 和 Span 上的鍵值對，提供豐富的上下文資訊：函數參數、返回值、token 用量、模型名稱等。Foundry 的 OpenTelemetry 語義慣例定義了一組標準屬性名稱，讓來自不同代理人框架的追蹤資料可以統一比較和分析。
+                </p>
+
+                <h2>啟用追蹤：三步驟</h2>
+
+                <p class="pw-post-body-paragraph">
+                    步驟一：在 Foundry Portal，進入您的專案，點選 <strong>Settings &gt; Tracing</strong>，將追蹤切換至「啟用」，並確認專案已連接一個 Azure Monitor Application Insights 資源。步驟二：在程式碼端，安裝 <code>azure-ai-projects[opentelemetry]</code>（Foundry SDK）或 <code>langchain-azure-ai[opentelemetry]</code>（LangChain），然後呼叫 <code>project.telemetry.enable()</code> 初始化追蹤匯出器。步驟三：執行代理人後，在 Portal 的 Analyze &gt; Tracing 頁面就能看到追蹤記錄。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    追蹤目前對 Prompt Agent（提示代理人）是正式可用（GA），對 Workflow Agent、Hosted Agent 和 Custom Agent 則仍在預覽階段。追蹤資料儲存在 Application Insights，費用依資料量和保留期計算；前 5 GB/月通常在免費層內。詳細的追蹤設定步驟請見<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/trace-agent-setup">官方追蹤設定文件</a>。
+                </p>
+
+                <h2>多代理人場景的觀察性</h2>
+
+                <p class="pw-post-body-paragraph">
+                    當多個代理人協作時，追蹤變得更加複雜，也更加重要。Foundry 與 Cisco Outshift 合作，在 OpenTelemetry 標準上擴充了<strong>多代理人語義慣例</strong>，定義了代理人間通訊（<code>agent_to_agent_interaction</code>）、狀態管理（<code>agent.state.management</code>）、代理人規劃（<code>agent_planning</code>）等標準 Span 類型。這讓您在一個追蹤視圖中看到整個多代理人協作過程：哪個代理人把任務分派給哪個子代理人、子代理人呼叫了哪些工具、各自的耗時和 token 用量。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    這些多代理人語義慣例已整合進 Foundry、Microsoft Agent Framework、LangChain、LangGraph 和 OpenAI Agents SDK，意味著您無需自行實作追蹤邏輯，框架會自動幫您記錄標準格式的資料。追蹤整合的詳細說明請見<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/trace-agent-framework">追蹤整合文件</a>。
+                </p>
+
+                <h2>實用除錯技巧</h2>
+
+                <p class="pw-post-body-paragraph">
+                    在 Foundry Portal 的追蹤清單中，按 Duration（持續時間）排序，找出耗時最長的 Trace；點進去後按 Span 耗時排序，找到最慢的工具呼叫。如果某個 Span 的輸出不如預期，查看它的 <code>input</code> 屬性，往往能發現是上游哪個 Span 傳入了錯誤的參數。另一個常見問題是工具呼叫循環——在 Trace 中尋找重複的相同工具名稱 Span，並與系統提示詞中的 Loop Prevention 設定對照。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    安全注意事項：追蹤會捕捉用戶輸入、模型輸出和工具參數，可能包含敏感資訊。建議在系統提示詞中不存放 API 金鑰或密碼，並對包含個人識別資訊的欄位設定遮蔽規則。Application Insights 的存取控制應依照最小權限原則設定，Log Analytics Reader 角色是查看追蹤的最低要求。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

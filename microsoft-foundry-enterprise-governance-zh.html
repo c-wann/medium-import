@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-04-25T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Azure AI Foundry 企業 AI 治理：RBAC、網路安全與合規性完整框架</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    當 AI 應用從原型走向生產，企業 IT 和安全團隊最關心的問題往往不是 AI 的能力有多強，而是：<em>誰可以存取哪些模型和資料？資料有沒有離開我們的網路邊界？這個 AI 系統符合 ISO 27001、SOC 2 還是 GDPR 的要求嗎？</em><a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/rbac-foundry">Microsoft Foundry</a> 提供了完整的企業級 AI 治理框架，讓安全、合規和開發能夠協同工作，而不是互相阻礙。
+                </p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/control-plane/media/overview/control-plane-overall.png" alt="Foundry Control Plane 統一管理視圖，展示跨訂閱的代理人、模型和工具清單，以及合規政策狀態" />
+                    <figcaption>Foundry Control Plane 提供跨訂閱的 AI 資產統一視圖，讓平台工程師和安全團隊一眼看清組織中所有 Foundry 資源、代理人部署和合規政策狀態，無需逐一查看各個訂閱。</figcaption>
+                </figure>
+
+                <h2>RBAC：最小權限原則的 AI 存取控制</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Microsoft Foundry 的存取控制建立在 Azure RBAC 上，提供三個主要 Foundry 角色：<strong>Azure AI User</strong>（最低開發者權限，可以建立代理人、呼叫模型、查看追蹤；不能建立新部署或刪除資源）、<strong>Azure AI Developer</strong>（可以管理部署和知識庫）、<strong>Contributor / Owner</strong>（完整管理能力，用於資源層級的管理任務）。遵循最小權限原則，日常開發工作應使用 Azure AI User 角色，只有在需要部署新模型時才提升權限。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    在多個開發團隊共用同一個 Foundry 資源的情境下，建議用<strong>多個 Project</strong>（專案）隔離各團隊的工作環境：每個 Project 有獨立的端點、RBAC 設定和資源配額，但共用同一個 Foundry 資源的帳單和模型部署。這讓各團隊的工作環境相互隔離，同時保持集中化的成本管理和模型管理。
+                </p>
+
+                <h2>網路安全：讓 AI 不出「家門」</h2>
+
+                <p class="pw-post-body-paragraph">
+                    敏感性高的行業（金融、醫療、政府）通常需要 AI 的推論請求和資料不離開私有網路。Foundry 支援兩種網路隔離模式：<strong>標準設定（Standard Setup with Private Networking）</strong>——代理人服務部署在 Azure Container Apps 環境中，配備 Agent Subnet（委派給 Microsoft.App/environments）和 Private Endpoint Subnet，透過各服務的 Private DNS Zone 進行私有名稱解析，所有流量不經過公網。<strong>完全隔離設定（Fully Isolated）</strong>則進一步阻斷所有公用網路存取，需要配合 Azure ExpressRoute 或 VPN Gateway 使用。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    對於資料主權要求嚴格的場景，Foundry 的 <strong>Provisioned Throughput（PTU）</strong>部署讓您的模型專屬跑在指定地區的基礎設施上，推論資料不跨地區傳輸。搭配 Azure Customer Managed Keys（CMK）可以讓您完全掌控 Foundry 儲存的加密金鑰，滿足最高等級的資料主權要求。完整的私有網路設定圖解請見<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/media/private-network-isolation.png">官方私有網路架構文件</a>。
+                </p>
+
+                <h2>Foundry Control Plane：跨訂閱的 AI 資產治理</h2>
+
+                <p class="pw-post-body-paragraph">
+                    對於擁有多個 Azure 訂閱的大型組織，<strong>Foundry Control Plane</strong>（控制平面）提供跨訂閱的 AI 資產統一管理視圖。在 Foundry Portal 的 Control Plane 介面中，您可以看到組織中所有 Foundry 資源、部署的代理人、使用的模型和工具，以及各項目的合規政策狀態——不需要切換訂閱逐一查看。Control Plane 整合了 Azure Policy、Microsoft Defender for AI 和 Microsoft Purview，形成三層合規管控：政策定義（允許哪些模型、哪些工具）、威脅偵測（異常 API 呼叫、資料外洩跡象）、資料治理（AI 處理的資料分類與稽核追蹤）。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Control Plane 的 Compliance 面板可以定義版本化的 AI 合規政策（例如「所有客戶對話的代理人必須啟用 Content Safety」），並自動掃描組織內的所有 Foundry 資源，標記不符合政策的項目。政策可以透過 Azure Policy 的方式推送，讓各訂閱的 Foundry 資源在建立時就自動套用合規設定，而不是依賴手動配置。
+                </p>
+
+                <h2>合規認證與資料保護</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Microsoft Foundry 繼承 Azure 平台的合規認證，包括 ISO 27001、SOC 1/2/3、GDPR、HIPAA、FedRAMP（High）和 PCI DSS。這些認證意味著 Foundry 基礎設施的安全控制已經通過第三方審計，企業可以將其納入自身的合規框架。對於受監管行業，建議查看 <a href="https://learn.microsoft.com/en-us/azure/compliance/">Azure Compliance Documentation</a> 確認相關認證的適用範圍，以及您的應用（而非只是基礎設施）需要自行承擔的合規責任。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Responsible AI 實踐在 Foundry 中也有工具支援：<strong>Content Safety</strong>（檢測有害內容）、<strong>Prompt Shields</strong>（防止提示詞注入攻擊）、<strong>Groundedness Detection</strong>（偵測 AI 是否在「幻想」沒有依據的資訊）、<strong>Task Adherence</strong>（確保代理人操作符合用戶意圖）。建議在所有面向外部用戶的代理人中啟用這四層護欄，形成完整的 AI 安全防護體系。關於建立企業 AI 治理框架的最佳實踐，可以參考<a href="https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/ai/">Azure Cloud Adoption Framework AI 場景指南</a>。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-04-15T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>LangChain 整合 Microsoft Foundry：建立複雜 AI 代理人工作流程的完整指南</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    LangChain 和 LangGraph 是目前最廣泛使用的 AI 應用開發框架，提供豐富的工具整合、記憶體管理和工作流程圖（Graph）抽象。<a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/langchain">Microsoft Foundry 與 LangChain 的深度整合</a>讓您可以用 <code>langchain-azure-ai</code> 套件，在 LangChain 和 LangGraph 的應用中直接取用 Foundry 的模型、工具、知識庫、代理人服務和追蹤能力，同時保持熟悉的 LangChain 程式設計模式。
+                </p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/how-to/develop/langchain-foundry-integration.png" alt="langchain-azure-ai 套件與 Microsoft Foundry 的整合架構圖，展示 LangChain/LangGraph 應用透過 Foundry 端點取用模型、工具、知識庫和代理人服務" />
+                    <figcaption>langchain-azure-ai 作為 LangChain/LangGraph 應用與 Microsoft Foundry 的橋接層，提供 Chat Models、Embeddings、Vector Stores、Agents、Memory、Tools 和 Tracing 等命名空間，統一透過 AZURE_AI_PROJECT_ENDPOINT 認證。</figcaption>
+                </figure>
+
+                <h2>安裝與設定</h2>
+
+                <p class="pw-post-body-paragraph">
+                    首先確認您已有 Microsoft Foundry 專案（可從 ai.azure.com 建立或升級自 Azure OpenAI 資源）。安裝基礎套件：<code>pip install -U langchain-azure-ai azure-identity</code>。依據您的使用情境，可以追加安裝選擇性功能：<code>pip install "langchain-azure-ai[tools]"</code>（啟用 Document Intelligence 等工具命名空間）或 <code>pip install "langchain-azure-ai[opentelemetry]"</code>（啟用 OpenTelemetry 追蹤整合）。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    設定環境變數：<code>export AZURE_AI_PROJECT_ENDPOINT="https://&lt;resource&gt;.services.ai.azure.com/api/projects/&lt;project&gt;"</code>。設定這個端點後，大多數 <code>langchain-azure-ai</code> 類別無需其他設定就能自動完成認證（透過 <code>DefaultAzureCredential</code>）。如果使用 API 金鑰，改設 <code>OPENAI_BASE_URL</code> 和 <code>OPENAI_API_KEY</code> 環境變數。
+                </p>
+
+                <h2>呼叫 Foundry 模型</h2>
+
+                <p class="pw-post-body-paragraph">
+                    有兩種方式在 LangChain 中呼叫 Foundry 模型。方式一（推薦）：使用 LangChain 的通用 <code>init_chat_model</code>，指定 <code>"azure_ai:&lt;model_name&gt;"</code> 前綴，例如 <code>model = init_chat_model("azure_ai:gpt-5")</code>。這讓您在不修改業務邏輯的情況下切換不同的 Foundry 模型。方式二：使用 <code>AzureAIOpenAIApiChatModel</code> 類別，可以明確指定 <code>project_endpoint</code>（使用 Entra ID 認證）或直接的 <code>endpoint</code>（使用 API 金鑰）。這兩種方式都支援 LangChain 標準的 <code>.invoke()</code>、<code>.stream()</code> 和 <code>.batch()</code> 介面。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    模型不限於 OpenAI 系列——因為 Foundry 模型目錄統一了所有模型的存取介面，您可以用完全相同的程式碼呼叫 <code>"azure_ai:Meta-Llama-3.3-70B-Instruct"</code>、<code>"azure_ai:mistral-large-2411"</code> 或 <code>"azure_ai:DeepSeek-R1"</code>，在不同模型之間做 A/B 比較，而不需要更改 LangChain 的 Chain 或 Agent 邏輯。
+                </p>
+
+                <h2>LangGraph + Foundry Agent Service</h2>
+
+                <p class="pw-post-body-paragraph">
+                    <code>langchain_azure_ai.agents</code> 命名空間讓您在 LangGraph 圖（Graph）中使用 Foundry 代理人節點。典型的應用模式是：建立多個專職代理人（如「研究代理人」、「撰寫代理人」、「審查代理人」），用 LangGraph 定義這些代理人之間的協作流程（邊和條件判斷），再透過 Foundry 的 Multi-agent 能力讓每個代理人可以彼此呼叫。Foundry Content Safety Middleware 也可以在 LangGraph 的邊上加入護欄，確保代理人之間傳遞的訊息符合安全要求。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    LangChain 的記憶體（Memory）整合是另一個亮點。<code>langchain_azure_ai.chat_message_histories</code> 讓您把對話歷史儲存在 Azure Cosmos DB 或 Azure AI 的記憶體功能中，跨 Session 保持對話連續性，適合需要記住用戶偏好或長期對話脈絡的應用。
+                </p>
+
+                <h2>向量儲存與 RAG</h2>
+
+                <p class="pw-post-body-paragraph">
+                    <code>langchain_azure_ai.vectorstores</code> 提供 Azure AI Search 和 Azure Cosmos DB 的向量儲存整合，讓您在 LangChain 的 RAG 鏈（Retrieval Chain）中直接使用 Foundry 的知識庫。<code>langchain_azure_ai.embeddings</code> 提供 Foundry 模型目錄中各 Embedding 模型的 LangChain 介面，包括 <code>text-embedding-3-large</code>、<code>cohere-embed-v3</code> 等。這讓您可以在同一個 LangChain 程式碼中，比較不同 Embedding 模型對 RAG 檢索精準度的影響。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    追蹤整合是 <code>langchain-azure-ai</code> 的一大優勢。安裝 <code>[opentelemetry]</code> 額外套件後，<code>langchain_azure_ai.callbacks</code> 會自動把 LangChain 的執行事件以 OpenTelemetry 格式匯出到 Foundry 的 Application Insights。這讓您在 Foundry Portal 的 Tracing 頁面查看 LangChain 和 LangGraph 工作流程的完整執行追蹤，而不需要單獨維護一套觀察性基礎設施。完整的 LangChain 整合文件請見<a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/develop/langchain">官方 LangChain with Foundry 指南</a>。
+                </p>
+
+                <h2>遷移現有 LangChain 應用的建議</h2>
+
+                <p class="pw-post-body-paragraph">
+                    如果您已有使用 <code>langchain-openai</code>（連接 Azure OpenAI）的現有應用，遷移到 <code>langchain-azure-ai</code> 只需要：替換 import（<code>from langchain_azure_ai.chat_models import ...</code>）、設定新的環境變數（AZURE_AI_PROJECT_ENDPOINT），以及調整模型名稱為 <code>"azure_ai:&lt;model&gt;"</code> 格式。大多數 LangChain 的 Chain、Tool、Memory 和 Callback 邏輯不需要修改。Foundry 的 Serverless 模型部署讓您可以同時測試多個模型，找到成本與效能的最佳平衡後再正式上線。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

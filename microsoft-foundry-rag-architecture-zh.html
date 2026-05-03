@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-01-29T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Azure AI Foundry RAG 架構完整指南：讓 AI 代理人讀懂您的企業資料</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    再強的語言模型，一旦問到您公司的內部文件、最新政策或私有資料庫，就會無從回答。<strong>Retrieval-Augmented Generation（RAG，檢索增強生成）</strong>是解決這個問題最成熟的架構模式，而 <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/retrieval-augmented-generation">Microsoft Foundry</a> 提供了完整的 RAG 工具鏈，從向量索引、語義搜尋到代理人工作流程，一站到位。
+                </p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/search/media/agentic-retrieval/agentic-retrieval-architecture.png" alt="代理人式檢索架構圖，展示查詢規劃（LLM）、平行子查詢執行（Azure AI Search）、語義重排序與結果合成的流程" />
+                    <figcaption>Foundry 的代理人式檢索（Agentic Retrieval）：LLM 負責查詢規劃，Azure AI Search 平行執行多個子查詢，語義重排序後由 LLM 合成最終答案。整個管線在 Foundry 中受到統一管理。</figcaption>
+                </figure>
+
+                <h2>RAG 是什麼？解決什麼問題？</h2>
+
+                <p class="pw-post-body-paragraph">
+                    傳統 LLM 的知識截止於訓練資料；它不知道昨天的新聞、您公司今早更新的 SOP，或者您資料庫裡的客戶資料。RAG 的核心思想很簡單：每次用戶提問時，先去外部知識庫<strong>撈出相關文件片段</strong>，把它們塞進 LLM 的上下文（Context），再讓 LLM 根據這些參考資料生成回覆。這樣模型就能「知道」它訓練資料以外的事情，而且回答更具可信度（有來源可查）。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    在 Foundry 的架構下，RAG 管線的組成元素包括：文件儲存（SharePoint、Blob Storage、本地檔案）、向量化（Embedding Model）、向量索引（Azure AI Search）、檢索（Retrieval Tool）、以及最終的答案生成（LLM）。每一個環節 Foundry 都有對應的服務整合。
+                </p>
+
+                <h2>步驟一：建立向量索引</h2>
+
+                <p class="pw-post-body-paragraph">
+                    在 Foundry Portal，進入您的專案，選擇左側導覽列的 <strong>Knowledge bases</strong>（知識庫），點選 <strong>Create vector index</strong>。您可以選擇資料來源：Azure Blob Storage、Azure AI Search（已有的索引）、SharePoint、OneLake，或直接上傳本地檔案。Foundry 會自動處理文件切塊（Chunking）、向量化（使用您選擇的 Embedding 模型，如 <code>text-embedding-3-large</code>），並建立 Azure AI Search 索引。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    切塊策略對 RAG 效果影響很大。Foundry 提供可調整的 Chunk Size（預設 1,024 tokens）與 Overlap（預設 256 tokens）設定。如果您的文件是長篇技術手冊，較大的 chunk size 保留更多上下文；如果是 FAQ 式的短問答，較小的 chunk size 能提升精準度。實務上建議針對您的文件類型分別測試不同設定。
+                </p>
+
+                <h2>步驟二：把知識庫連接到代理人</h2>
+
+                <p class="pw-post-body-paragraph">
+                    建好知識庫後，在代理人（Agent）設定頁面，選擇 <strong>Add knowledge</strong>，將您的向量索引連接上來。Foundry 代理人預設使用<strong>代理人式檢索（Agentic Retrieval）</strong>：每次用戶提問，代理人會自動判斷是否需要查知識庫，並根據問題的意圖分解成多個子查詢平行搜尋，最後合成有依據的回覆。這種方式比簡單的「向量相似度搜尋 + 填充上下文」更智慧，尤其適合複雜的多跳查詢（Multi-hop queries）。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    如果需要更精細的控制，您也可以在程式碼中直接使用 Foundry SDK 的 <code>AzureAISearchTool</code>：
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    <code>from azure.ai.agents.models import AzureAISearchTool, AzureAISearchQueryType</code> — 設定 <code>index_connection_id</code>、<code>index_name</code> 與 <code>query_type</code>（支援 <code>SIMPLE</code>、<code>SEMANTIC</code>、<code>VECTOR</code>、<code>VECTOR_SEMANTIC_HYBRID</code>），即可讓代理人使用您的 Azure AI Search 索引。完整範例請見<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/tools/azure-ai-search">官方文件</a>。
+                </p>
+
+                <h2>混合搜尋：關鍵字 + 語義向量</h2>
+
+                <p class="pw-post-body-paragraph">
+                    單純的向量相似度搜尋有時會漏掉精確的詞彙匹配（例如產品編號、人名），而單純的關鍵字搜尋又缺乏語義理解能力。Foundry 推薦使用 <strong>VECTOR_SEMANTIC_HYBRID</strong> 查詢模式，結合向量搜尋、BM25 關鍵字搜尋與語義重排序（Semantic Reranker），在大多數情況下能同時兼顧精準度與語義理解。Azure AI Search 的語義重排序功能是免費的前 1,000 個查詢/月，超過才開始計費。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    對於需要跨多個索引或多種資料來源的複雜場景，Foundry 的 <strong>Foundry IQ（預覽）</strong>功能提供了統一的知識管理層，支援多知識庫路由與結果融合。如果您的企業有大量非結構化文件，建議評估這個進階功能。詳細說明請見<a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/retrieval-augmented-generation">官方 RAG 概念文件</a>。
+                </p>
+
+                <h2>評估 RAG 品質的三個核心指標</h2>
+
+                <p class="pw-post-body-paragraph">
+                    RAG 系統的品質評估不能只看「回答對不對」，還需要衡量三個維度：<strong>Context Recall（上下文召回率）</strong>——知識庫有沒有把相關文件找出來；<strong>Groundedness（接地氣性）</strong>——模型的回答有沒有忠實反映檢索到的文件，沒有胡亂捏造；<strong>Relevance（相關性）</strong>——回答是否真正解答了用戶的問題。Foundry 的<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/evaluate-agent">評估框架</a>提供這三個指標的自動化評分，讓您在迭代索引與提示詞設計時有量化依據。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

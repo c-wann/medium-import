@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-04-05T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Microsoft Foundry 多模態 AI：影像、語音與文字的整合開發實戰</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    文字不再是 AI 應用的唯一輸入。在 <a href="https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry">Microsoft Foundry</a> 的模型目錄中，您可以取用 GPT-4.1（視覺+文字）、GPT-4o Audio（音訊+文字）、Phi-4-multimodal（視覺+語音+文字）、Stability AI SDXL（文字生成影像）等多模態模型，在同一個平台、同一個 SDK、同一個計費帳戶下建立處理圖片、聲音與文字的 AI 應用。本文帶您了解 Foundry 的多模態能力全貌與開發實戰。
+                </p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/concepts/multimodal-overview.png" alt="Microsoft Foundry 多模態 AI 架構圖，展示文字、影像、語音輸入到統一模型目錄的處理流程" />
+                    <figcaption>Foundry 多模態架構：文字、影像（PNG/JPG/GIF）、音訊（MP3/WAV）和視訊（MP4，部分模型）可以組合傳入支援多模態的模型，統一由 Foundry 端點管理，帳單整合在 Foundry 資源下。</figcaption>
+                </figure>
+
+                <h2>視覺理解：讓 AI 看懂圖片</h2>
+
+                <p class="pw-post-body-paragraph">
+                    <strong>GPT-4.1 Vision</strong> 和 <strong>GPT-4o</strong> 都支援在同一個 API 呼叫中傳入文字和圖片。在 Responses API 中，圖片可以用兩種方式傳入：URL（公開可存取的圖片連結）或 Base64 編碼的圖片資料。Foundry Portal 的 Playground 支援直接拖拽圖片測試，不需要寫任何程式碼就能感受視覺理解的能力。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    實際應用場景非常廣泛：<strong>工廠品質控制</strong>——上傳產品照片，讓代理人判斷是否有瑕疵；<strong>文件處理</strong>——傳入掃描的合約或報告圖片，讓模型提取關鍵資訊；<strong>醫療影像初篩</strong>——結合 RAG 知識庫，提供圖片與對應診斷指引；<strong>電商商品分析</strong>——根據商品照片自動生成商品描述和分類標籤。這些場景過去需要單獨的視覺 ML 模型，現在透過 Foundry 的多模態 LLM 可以在一個統一的 API 介面實現。
+                </p>
+
+                <h2>語音理解與語音合成</h2>
+
+                <p class="pw-post-body-paragraph">
+                    <strong>GPT-4o Audio</strong>（<code>gpt-4o-audio-preview</code>）支援直接傳入音訊 clip 並在回覆中包含音訊輸出，同一個模型既能「聽」也能「說」。使用 <strong>Audio Completions API</strong> 時，輸入可以是 MP3、WAV、FLAC、OGG 等格式的音訊，輸出可以指定回應語言、語調和速度。另外，<strong>Whisper</strong>（語音轉文字）和 <strong>TTS（Text-to-Speech）</strong>作為獨立模型繼續可用，適合只需要單向語音處理的場景。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    <strong>Phi-4-multimodal</strong> 是微軟自家的輕量級多模態模型，在視覺和語音理解上表現出色，模型尺寸遠小於 GPT-4.1，部署成本更低，尤其適合需要在邊緣裝置（Edge Device）或對延遲要求較高的場景中使用。在 Model Catalog 中可以找到 Phi-4-multimodal 的詳細說明和 Serverless API 計費方式。
+                </p>
+
+                <h2>影像生成：從文字到圖片</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Foundry 模型目錄提供多個影像生成模型，包括 <strong>DALL-E 3</strong>（OpenAI）、<strong>Stability AI SDXL</strong>、<strong>Flux</strong>（Black Forest Labs）等。影像生成透過 Images API 呼叫，傳入文字提示詞（Prompt）和圖片尺寸設定（如 1024x1024），模型返回生成的圖片 URL 或 Base64 資料。Foundry Portal 的 Playground 同樣支援視覺化測試，可以直接比較不同模型在相同提示詞下的生成效果。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    在代理人工作流程中，影像生成可以作為一個工具（Custom Function Tool）整合：用戶描述需求，代理人理解意圖後自動呼叫影像生成 API，並在對話中返回圖片連結。結合 Code Interpreter（讓代理人處理 Python 程式碼），還能做到「生成圖片後根據用戶反饋修改」的互動式影像創作流程。
+                </p>
+
+                <h2>多模態 RAG：讓知識庫理解圖片文件</h2>
+
+                <p class="pw-post-body-paragraph">
+                    企業文件中包含大量圖表、示意圖和截圖，這些內容在傳統 RAG 管線中往往被忽略（因為純文字 Embedding 無法索引圖片內容）。Foundry 的 <strong>多模態 RAG</strong> 解決方案是：在建立知識庫索引時，使用支援視覺的 Embedding 模型或 GPT-4o Vision 為文件頁面（包含圖片）生成描述，再將描述納入向量索引。這樣包含圖表的技術手冊、產品目錄或設計文件就能被正確檢索，代理人能夠回答「圖表中顯示的數據是什麼」這類問題。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    多模態 AI 開發在 Foundry 中的起點是 Model Catalog，找到您目標的多模態模型，先在 Playground 用幾個真實的輸入測試，確認符合需求後再建立部署。建議在早期測試階段使用 Serverless API 部署（按用量付費），規模化後再評估是否切換到 Provisioned Throughput（PTU，確保穩定吞吐量）部署模式。各多模態模型的詳細計費資訊請見<a href="https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/">Azure OpenAI 服務定價頁面</a>。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

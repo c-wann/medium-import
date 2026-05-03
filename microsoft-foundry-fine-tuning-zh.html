@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-01-17T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Microsoft Foundry 模型微調實戰：SFT、DPO、RFT 三種技術完整比較</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    預訓練模型不是萬能的——當您需要讓 GPT-4o 說出符合企業品牌的語氣、讓 Phi-4 掌握特定領域知識，或讓 o4-mini 在複雜數學題上更精準，微調（Fine-tuning）就是關鍵。<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/fine-tuning-overview">Microsoft Foundry</a> 目前支援三種微調技術：監督微調（SFT）、直接偏好優化（DPO）與強化微調（RFT）。本文逐一解析它們的差異，幫助您選擇最適合場景的方法。
+                </p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/ai-foundry/media/fine-tuning/fine-tuning-overview.png" alt="Azure AI Foundry 微調工作流程，展示訓練資料準備、監督微調、評估與部署各個步驟" />
+                    <figcaption>Foundry 微調工作流程：從訓練資料準備、選擇微調技術（SFT/DPO/RFT）、模型訓練，到評估並部署微調後模型，全程在 Foundry Portal 或 SDK 中完成。</figcaption>
+                </figure>
+
+                <h2>微調技術一：SFT（監督微調）</h2>
+
+                <p class="pw-post-body-paragraph">
+                    <strong>監督微調（Supervised Fine-Tuning, SFT）</strong>是最普遍的微調方法，適合 70–90% 的應用情境。您準備一份輸入（Input）配對期望輸出（Output）的訓練資料集，Foundry 用這份資料讓模型學習所需行為。SFT 資料格式通常是 JSONL 對話格式（role/content）。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Foundry 上 SFT 支援的模型包括：<strong>GPT-4.1</strong>（每百萬 token $25 訓練費）、<strong>GPT-4.1-mini</strong>（每百萬 token $8）、<strong>GPT-4o（2024-08-06）</strong>、<strong>Phi-4</strong>、<strong>Mistral Large / Small</strong>，以及各 Meta Llama 版本。透過 Serverless 方式微調，只需 $1.70 起（每百萬輸入 token），無需申請 GPU 配額；Managed Compute 模式則提供完整控制權，但不支援 OpenAI 系列模型。
+                </p>
+
+                <h2>微調技術二：DPO（直接偏好優化）</h2>
+
+                <p class="pw-post-body-paragraph">
+                    <strong>直接偏好優化（Direct Preference Optimization, DPO）</strong>適合需要根據人類喜好排序回應的場景，例如減少有害內容、提升回覆品質。DPO 的資料格式與 SFT 不同，每筆資料包含三個欄位：提示（prompt）、偏好回覆（chosen）和拒絕回覆（rejected）。模型透過對比兩種回覆學習偏好方向。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Foundry 上 DPO 支援 GPT-4o（2024-08-06）及部分 Meta Llama 模型。DPO 通常在 SFT 之後使用，用來進一步對齊模型行為，而非從頭開始訓練。如果您的目標是讓模型「不要說什麼」的同時「說得更好」，DPO 往往是比多加 SFT 樣本更有效率的方法。
+                </p>
+
+                <h2>微調技術三：RFT（強化微調）</h2>
+
+                <p class="pw-post-body-paragraph">
+                    <strong>強化微調（Reinforcement Fine-Tuning, RFT）</strong>是最新的技術，目前僅支援 <strong>o4-mini</strong> 模型，最適合可以被客觀驗證的任務，例如數學解題、程式碼驗證、科學計算。與 SFT 不同，RFT 不需要提供期望答案，而是提供一個評分函數（Grader）讓模型從強化訊號中學習。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    RFT 的核心概念是：o4-mini 本身具備推理（reasoning）能力，RFT 讓模型透過反覆嘗試、接收評分、調整策略的方式，強化在特定問題類型上的推理路徑。如果您的使用情境是需要準確度極高的 STEM 問題，RFT 的效果往往遠超 SFT。詳細的 RFT 入門請見<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/fine-tune-models-tsuzumi#reinforcement-fine-tuning">官方 RFT 指南</a>。
+                </p>
+
+                <h2>如何選擇微調方法</h2>
+
+                <p class="pw-post-body-paragraph">
+                    選擇微調技術的三個關鍵問題：一、您有「正確答案」的範例資料嗎？如果有，先考慮 SFT。二、您的目標是讓模型偏好某種風格，且已有「好答案」vs「差答案」的對比資料？選 DPO。三、您的任務有客觀評分標準，而且用的是 o4-mini？考慮 RFT。大多數情況下，最佳策略是先做 SFT，再視需要用 DPO 精修對齊，最後在生產環境用評估資料驗證效果。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    微調費用以 Serverless 模式計算，不需要預先申請 GPU 資源。在 Foundry Portal 中，您可以在 <strong>Fine-tuning</strong> 頁面直接上傳 JSONL 資料集、設定超參數（Epoch 數、學習率、批次大小），並透過 Foundry 的評估工具比較基礎模型與微調模型的差異。完整的 Serverless 計費明細請參考<a href="https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/">Azure OpenAI 服務定價頁面</a>。
+                </p>
+
+                <h2>微調後的部署</h2>
+
+                <p class="pw-post-body-paragraph">
+                    微調完成後，模型會出現在您的 Foundry 專案的 <strong>Deployments</strong> 列表中。您可以像部署任何其他模型一樣，將它透過 Serverless API 端點對外提供服務。微調後的 GPT 系列模型支援 Responses API（Agents v2），可直接在代理人工作流程中使用，無需任何特殊配置。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    微調是一項需要反覆實驗的工作：從小批次資料開始（100–500 筆），驗證效果後再擴大規模。建議每次微調同步建立評估資料集，並使用 Foundry 的<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/evaluate-agent">評估功能</a>持續衡量模型改進程度。好的評估指標是微調成功的關鍵，不要只看訓練損失（Training Loss）。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

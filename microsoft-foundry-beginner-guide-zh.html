@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-01-08T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Microsoft Foundry 完整入門指南：從零開始建立您的第一個 AI 應用</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    Azure 的 AI 開發平台已全面升級為 <a href="https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry">Microsoft Foundry</a>，整合了超過 1,900 個模型、1,400 個工具，以及完整的企業級治理能力，讓開發者不需要管理底層基礎設施，就能快速打造生產就緒的 AI 解決方案。如果您還沒有接觸過 Foundry，本文就是您最好的起點。
+                </p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/concepts/architecture/foundry-resource-model.png" alt="Microsoft Foundry 資源模型架構圖，展示 Foundry 資源、專案、代理人、模型與工具的層次關係" />
+                    <figcaption>Microsoft Foundry 採用單一資源模型，將 Foundry 資源（含多個專案）、模型部署、代理人與工具統一在同一個 Azure 資源提供者命名空間下管理。</figcaption>
+                </figure>
+
+                <h2>什麼是 Microsoft Foundry？</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Microsoft Foundry 是微軟在 2025 年底全面推出的企業級 AI 平台即服務（PaaS），前身是 Azure AI Studio 與 Azure AI Foundry（classic）。它將代理人（Agents）、模型（Models）與工具（Tools）整合在同一個管理架構下，提供統一的身分驗證（RBAC）、網路安全，以及 Azure Policy 整合。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    平台本身免費使用與探索，費用產生在部署層級，依模型、代理人與工具的個別計費方式計算。您可以使用<a href="https://aka.ms/Foundry-ROI-Calculator">微軟官方的 ROI 計算器</a>估算投資回報率。目前 Foundry 支援 Python、C#、JavaScript/TypeScript（預覽）與 Java（預覽）四種 SDK。
+                </p>
+
+                <h2>核心架構：Foundry 資源與專案</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Foundry 的資源模型分為兩層：最上層是 <strong>Foundry 資源</strong>（Resource），代表一個 Azure 部署單元；其下包含一或多個<strong>專案</strong>（Project）。每個專案有獨立的端點（Project Endpoint），格式為 <code>https://&lt;resource_name&gt;.ai.azure.com/api/projects/&lt;project_name&gt;</code>。所有 API 呼叫、模型部署與代理人管理都透過這個端點進行。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    與舊版 Hub + Project 架構相比，新模型大幅簡化了設定流程。如果您是從 Azure OpenAI 升級，可以在保留原有端點、API 金鑰與現有狀態的情況下，直接<a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/upgrade-azure-openai">升級 Azure OpenAI 資源為 Foundry 資源</a>。
+                </p>
+
+                <h2>三分鐘：寫出第一個 Foundry API 呼叫</h2>
+
+                <p class="pw-post-body-paragraph">
+                    安裝 SDK 只需一行指令：<code>pip install azure-ai-projects azure-identity</code>。接著設定您的 <code>PROJECT_ENDPOINT</code> 環境變數，就可以用幾行程式碼呼叫任何 Foundry 支援的模型。Foundry 使用統一的 <strong>Responses API</strong>（Agents v2），取代舊版的 Assistants API，所有 Foundry Direct 模型都支援這個新介面。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    以下是最精簡的呼叫範例：建立 <code>AIProjectClient</code>，呼叫 <code>project.get_openai_client()</code> 取得 OpenAI 相容客戶端，再用 <code>openai.responses.create(model="gpt-5-mini", input="...")</code> 取得回應。完整的快速入門請參考<a href="https://learn.microsoft.com/en-us/azure/foundry/quickstarts/get-started-code">官方 Quickstart 文件</a>。
+                </p>
+
+                <h2>選擇您的開發路徑</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Foundry 支援多種開發情境。如果您想從程式碼直接呼叫模型，直接看 API Quickstart；如果需要建立帶有工具和記憶體的代理人，請從 Agent Service 入手；若要在瀏覽器中探索模型，可以使用 <a href="https://ai.azure.com/">Foundry Portal</a> 的 Playgrounds；大規模部署與管理模型則走 Foundry Models Overview；在 VS Code 中開發則可安裝 <strong>Foundry for VS Code</strong> 擴充套件。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    對於 IT 管理員與平台工程師，Foundry 提供完整的治理工具：統一的 RBAC、Azure Policy 整合、Microsoft Defender、Microsoft Purview，以及 Foundry Control Plane 用於跨訂閱的 AI 資產管理。關於各角色的最佳起點，可以參考<a href="https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry#choose-your-path">官方路徑選擇指引</a>。
+                </p>
+
+                <h2>2026 年最新動態</h2>
+
+                <p class="pw-post-body-paragraph">
+                    截至 2026 年初，Foundry 持續快速演進。幾項值得關注的新功能包括：<strong>Prompt Optimizer（預覽）</strong>可根據評估結果自動改善代理人提示詞；<strong>Task Adherence Guardrails（預覽）</strong>防止代理人工作流程偏離使用者意圖；<strong>LangChain 與 LangGraph 整合</strong>讓開發者可以用主流開源框架建立代理人並取得完整追蹤資料；以及 <strong>Fireworks 模型匯入（預覽）</strong>讓您可以將自訂模型引入 Foundry 生態系。完整更新清單請見<a href="https://learn.microsoft.com/en-us/azure/foundry/whats-new-foundry">官方 What's New 頁面</a>。
+                </p>
+
+                <h2>結語</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Microsoft Foundry 標誌著微軟 AI 開發平台進入統一化、企業化的新紀元。無論您是個人開發者還是大型企業的 AI 工程師，Foundry 都提供了從原型到生產的完整工具鏈。最好的起點是直接打開 <a href="https://ai.azure.com/">ai.azure.com</a>，建立一個免費的 Azure 帳號，然後跟著官方 Quickstart 走一遍——整個過程不超過 15 分鐘，您就能看到第一個 AI 回應。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    對 Foundry 的哪個功能最感興趣？歡迎在留言區分享，我會在後續文章深入介紹各個主題。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

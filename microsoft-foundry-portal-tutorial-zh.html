@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-02-07T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Foundry Portal 完整教學：無程式碼打造 AI 工作流程的視覺化介面</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    不是每個人都習慣直接寫 Python 程式碼。<a href="https://ai.azure.com/">Microsoft Foundry Portal</a> 提供完整的視覺化操作介面，讓產品經理、業務分析師和剛入門的開發者也能快速建立、測試和部署 AI 代理人，不需要觸碰一行程式碼。本文帶您完整走過 Foundry Portal 的主要功能區塊。
+                </p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/explore/portal-overview.png" alt="Microsoft Foundry Portal 首頁截圖，展示左側導覽列、中央工作區、模型類別與代理人建立入口" />
+                    <figcaption>Foundry Portal（ai.azure.com）提供統一的視覺化工作區，從探索模型、建立代理人、管理知識庫，到查看追蹤記錄，都在同一個介面完成。</figcaption>
+                </figure>
+
+                <h2>入口總覽：四大主要工作區</h2>
+
+                <p class="pw-post-body-paragraph">
+                    登入 Foundry Portal 後，您會看到左側導覽列分為四個主要工作區：<strong>Explore</strong>（探索模型與工具）、<strong>Build</strong>（建立代理人與應用）、<strong>Manage</strong>（管理部署、連線與配額），以及 <strong>Analyze</strong>（評估與追蹤）。確認 Portal 右上角的「New Foundry」切換按鈕已開啟，才能使用最新功能（Agents v2 / Responses API）。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    首次進入時，Portal 會引導您選擇或建立 Foundry 資源與專案。如果您已有 Azure OpenAI 資源，可以在 Manage > Resources 頁面找到升級選項，將其轉換為 Foundry 資源而不遷移任何現有部署。
+                </p>
+
+                <h2>Model Catalog：1,900+ 個模型一站選擇</h2>
+
+                <p class="pw-post-body-paragraph">
+                    在 Explore > Model Catalog 中，您可以依照廠商（OpenAI、Meta、Google、Mistral、DeepSeek 等）、模態（文字、視覺、語音、多模態）、任務類型（聊天、程式碼、推理、嵌入、影像生成）篩選模型。每個模型頁面都有詳細的規格說明、定價估算與快速測試功能。值得注意的是，部分模型（如 Claude 3.7、GPT-5）需要申請訪問權限，在模型頁面可以直接提交申請。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    點選模型後，<strong>Open in playground</strong> 按鈕讓您立即在瀏覽器中測試模型回應，調整系統提示詞（System Prompt）、溫度（Temperature）、最大 token 數等參數，觀察輸出結果，無需部署也無需寫程式碼。這是快速評估不同模型是否符合您的使用情境的最佳方式。
+                </p>
+
+                <h2>Agent Builder：視覺化建立 AI 代理人</h2>
+
+                <p class="pw-post-body-paragraph">
+                    在 Build > Agents 中，點選 <strong>New Agent</strong> 開始建立代理人。整個設定流程分為幾個卡片區塊：模型選擇（從您的部署中選）、指令（Instructions，即系統提示詞）、工具（Tools，如 Bing 搜尋、Code Interpreter、Azure AI Search、Functions）、以及知識庫（Knowledge Bases）。填完設定後，右側的 Chat 面板可以即時測試代理人的行為，不需要先部署。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    指令區塊旁有一個 ✏️✨ 圖示，點選會開啟 <strong>Prompt Optimizer</strong>（提示詞優化器，預覽功能）。您只需描述代理人的目標，它會自動生成結構化的系統提示詞，並逐段附上修改理由，讓您理解每一行指令的用途。初學者可以用這個功能快速上手，有經驗的開發者也能用它改善現有提示詞。
+                </p>
+
+                <h2>工具整合：免程式碼連接外部服務</h2>
+
+                <p class="pw-post-body-paragraph">
+                    在 Agent Builder 的 Tools 區塊，您可以直接勾選要啟用的工具。目前支援的工具包括：<strong>Bing Search</strong>（讓代理人搜尋網路）、<strong>Code Interpreter</strong>（讓代理人執行 Python 程式碼、繪製圖表、處理 CSV）、<strong>Azure AI Search</strong>（連接您的知識庫）、<strong>Azure Functions</strong>（呼叫自訂 API）、以及 <strong>Logic Apps</strong>（無縫整合企業工作流程）。每種工具點選後都有一個設定面板，填入必要的連線資訊即可。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    如果需要呼叫外部 REST API，可以在 <strong>Functions</strong> 區塊上傳 OpenAPI 規格（JSON/YAML），Foundry 會自動解析可用的函數，讓代理人在需要時呼叫。這個功能讓您無需寫程式碼就能把代理人接進 ERP、CRM 或任何有 API 的企業系統。詳細設定請見<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/tools/openapi-spec">OpenAPI Functions 文件</a>。
+                </p>
+
+                <h2>Evaluate 與 Tracing：從 Portal 分析代理人行為</h2>
+
+                <p class="pw-post-body-paragraph">
+                    在 Analyze > Tracing，您可以查看代理人每次執行的完整追蹤記錄：哪些工具被呼叫、呼叫參數是什麼、回應時間如何、token 用量多少。當代理人給出奇怪的答案時，追蹤記錄是診斷問題的第一步。Foundry 的追蹤資料儲存在您的 Azure Monitor Application Insights 中，支援長期保留與自訂查詢。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    在 Analyze > Evaluations，您可以上傳評估資料集（測試問題 + 期望答案），讓 Foundry 自動對代理人的回覆進行評分，指標包括：Groundedness（接地氣性）、Relevance（相關性）、Coherence（連貫性）和 Fluency（流暢度）。評估完成後，結果會以圖表形式呈現，讓您一眼看出哪些問題類型的表現最弱。關於評估的完整說明，請參考<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/evaluate-agent">官方評估文件</a>。
+                </p>
+
+                <h2>快速上手的三個建議</h2>
+
+                <p class="pw-post-body-paragraph">
+                    第一，從 Playground 開始：先在 Model Catalog 中找到您想用的模型，直接在 Playground 測試，感受不同模型的個性與能力。第二，建立最小可行代理人（MVP Agent）：只加一個工具（如 Code Interpreter），測試核心功能，再逐步擴充。第三，及早建立評估資料集：收集 20–50 個真實的問答對作為評估基準，每次修改指令後都跑一次評估，確保改動方向正確。這三步驟能讓您在不寫任何程式碼的情況下，一天內建出第一個可用的 AI 代理人。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-03-23T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>從 Azure OpenAI 升級到 Microsoft Foundry：零停機完整遷移指南</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    如果您目前正在使用 Azure OpenAI Service 建立 AI 應用，微軟的建議是將其升級為 <a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/upgrade-azure-openai">Microsoft Foundry 資源</a>——不是遷移，而是<strong>就地升級</strong>。升級後，您的現有模型部署、API 金鑰、端點位址和現有應用狀態全部保留，同時解鎖 Foundry 的代理人、RAG、評估、追蹤、護欄等完整功能。本文說明升級流程、注意事項，以及遷移後要啟用的新能力。
+                </p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/overview/azure-openai-to-foundry-upgrade.png" alt="Azure OpenAI 升級至 Microsoft Foundry 的架構演進圖，展示舊版 OpenAI 資源升級為 Foundry 資源後額外啟用的能力層" />
+                    <figcaption>Azure OpenAI Service 升級為 Microsoft Foundry 資源是就地升級（In-place Upgrade），不遷移任何現有資源，升級後在原有 OpenAI API 端點之上新增代理人、知識庫、評估與治理能力層。</figcaption>
+                </figure>
+
+                <h2>升級前：了解 Foundry 與 Azure OpenAI 的差異</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Azure OpenAI Service 是純粹的 OpenAI 模型 API 服務；Microsoft Foundry 是在此之上的完整 AI 開發平台。功能差異如下：<strong>模型</strong>方面，Foundry 在保留所有 OpenAI 模型的同時，新增 Meta Llama、Mistral、DeepSeek-R1、Phi-4、Claude、Grok 等 1,900+ 個第三方模型，透過統一的 Foundry Models API 存取。<strong>代理人</strong>方面，Foundry 提供 Agents v2（Responses API）和 Agent Service（含工具、記憶體、知識庫整合），取代舊版的 Assistants API。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    <strong>終端點相容性：</strong>升級後，舊版 Azure OpenAI 端點（<code>https://&lt;resource&gt;.openai.azure.com/</code>）繼續有效；新的 Foundry Direct 端點（<code>https://&lt;resource&gt;.services.ai.azure.com/openai/v1</code>）同時啟用。舊版 API 金鑰（Ocp-Apim-Subscription-Key）繼續可用。這保證了現有應用<strong>零停機、零程式碼修改</strong>完成升級。
+                </p>
+
+                <h2>升級步驟</h2>
+
+                <p class="pw-post-body-paragraph">
+                    步驟一：登入 Azure Portal，找到您的 Azure OpenAI 資源。在資源概觀頁面的頂部，應該會出現「Upgrade to Microsoft Foundry」的升級提示橫幅。點選後，確認升級對話框中的說明，再點「Upgrade」。整個升級過程通常在幾秒鐘內完成。步驟二：升級後，開啟 <a href="https://ai.azure.com/">Foundry Portal</a>，您的資源和所有現有部署應該可見。步驟三：在 Foundry Portal 建立一個「專案（Project）」，取得新格式的 Project Endpoint（<code>https://&lt;resource&gt;.ai.azure.com/api/projects/&lt;project&gt;</code>），後續所有 Foundry 功能透過此端點使用。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    如果升級橫幅沒有顯示，可能是因為您的資源位於尚不支援 Foundry 升級的地區。支援地區清單和各地區功能可用性請見<a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/foundry-regions-quota">Foundry 地區與配額文件</a>。
+                </p>
+
+                <h2>API 遷移：從 Assistants API 到 Responses API</h2>
+
+                <p class="pw-post-body-paragraph">
+                    舊版 Assistants API 的核心概念是：Thread（對話串）、Message（訊息）、Run（執行）、Assistant（助手）。新版 Responses API（Agents v2）重新命名：Conversation（對話）、Item（項目）、Response（回覆）、Agent Version（代理人版本）。這不只是改名——Responses API 提供更豐富的工具整合、更好的串流支援，以及與 Foundry 護欄、評估、追蹤的深度整合。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    遷移的主要工作是更新 SDK 版本（<code>azure-ai-projects>=2.0</code>）和調整 API 呼叫路徑。如果您的舊版應用還需要繼續使用 Assistants API，Foundry 在可預見的未來繼續支援 <code>/openai/assistants/</code> 端點，不需要立即遷移。但新功能只會在 Responses API 上持續開發，長期來看遷移是值得的。完整的 API 對照表請見<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/overview">Agents 概覽文件</a>。
+                </p>
+
+                <h2>升級後立即可以啟用的新功能</h2>
+
+                <p class="pw-post-body-paragraph">
+                    升級完成後，這些功能可以立即使用，無需額外設定：<strong>Model Catalog</strong>（探索和試用 1,900+ 個模型）、<strong>Prompt Optimizer</strong>（自動改善代理人指令）、<strong>Guardrails & Controls</strong>（包含 Content Safety、Prompt Shields 和 Task Adherence）。以下功能需要少量額外配置：<strong>Tracing</strong>（需要連接 Application Insights 資源）、<strong>RAG 知識庫</strong>（需要建立 Azure AI Search 資源和向量索引）、<strong>Fine-tuning</strong>（需要訓練資料集）、<strong>Evaluation</strong>（需要評估資料集）。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    整體評估：對於已在 Azure OpenAI 上運作的生產應用，升級到 Foundry 幾乎是純收益，因為現有功能完全保留，新功能隨時可按需啟用，成本結構不變（帳單仍在模型部署層）。唯一的注意事項是確認 RBAC 配置：升級後，Foundry Portal 的存取由 <strong>Azure AI User</strong>（開發者最低權限）、<strong>Contributor</strong>（資源管理）和 <strong>Owner</strong>（完整控制）角色控制，需要確認現有 IAM 設定符合您組織的最小權限原則。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta property="article:published_time" content="2026-03-11T12:00:00.000Z" />
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Microsoft Foundry Prompt Optimizer：自動優化 AI 代理人提示詞的完整指南</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">
+                    寫出一份好的 AI 代理人系統提示詞（System Instructions）往往比想像中難。太短，代理人行為不一致；太長，模型容易忽略重要指令；措辭含糊，代理人每次回答風格各異。<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/prompt-optimizer">Microsoft Foundry 的 Prompt Optimizer（預覽）</a>是一個內建的 AI 助手，能根據最佳提示詞工程原則，自動改善您的代理人指令，並逐段解釋每項修改的理由。
+                </p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/observability/prompt-optimizer-dialog.png" alt="Foundry Portal 中的 Prompt Optimizer 對話框截圖，展示原始指令、優化後指令（以紫色標示修改段落）與逐段說明理由的介面" />
+                    <figcaption>Prompt Optimizer 對話框：左側顯示原始指令，右側顯示優化後版本，修改的段落以紫色左邊框標示。點選每個修改段落旁的對話泡泡圖示可查看修改理由。</figcaption>
+                </figure>
+
+                <h2>Prompt Optimizer 解決什麼問題？</h2>
+
+                <p class="pw-post-body-paragraph">
+                    即使是有經驗的 AI 工程師，在撰寫系統提示詞時也常犯幾個錯誤：指令結構鬆散（缺乏角色定義、能力邊界和回應格式說明）、對應各類邊界案例（Edge Cases）缺乏明確指引、混用祈使句和描述句導致模型解讀不一。Prompt Optimizer 內部使用一個 LLM 評審另一個 LLM 的指令，套用提示詞工程最佳實踐（如 Few-shot 範例、明確的拒絕條件、結構化輸出格式），自動產出改善版本。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    最重要的是，它不是黑盒子——每一項修改都附有透明的理由說明，告訴您為什麼這樣改、改動套用了哪個提示詞工程原則。這讓您在接受修改之前能做知情判斷，而不是盲目信任自動化輸出。
+                </p>
+
+                <h2>如何開啟 Prompt Optimizer</h2>
+
+                <p class="pw-post-body-paragraph">
+                    在 Foundry Portal（ai.azure.com），確保 New Foundry 切換已開啟。進入 <strong>Build &gt; Agents</strong>，選擇或建立一個代理人。在代理人設定面板的 <strong>Instructions</strong>（指令）區塊標頭旁，找到 ✏️✨ 圖示並點選，Prompt Optimizer 對話框就會開啟。此外，在 Model Playground 中只要有系統指令輸入欄位，就可以使用 Prompt Optimizer，不必先建立正式代理人。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Prompt Optimizer 目前支援的地區包括：Central US、East US 2、France Central、Germany West Central、Italy North、Japan West、North Central US、Poland Central、Spain Central、Sweden Central、Switzerland West、UAE North、West US、West US 2、West US 3。如果您的 Foundry 專案在不支援的地區，✏️✨ 圖示不會出現。
+                </p>
+
+                <h2>使用流程：從零到一的新代理人</h2>
+
+                <p class="pw-post-body-paragraph">
+                    如果代理人還沒有指令：開啟 Prompt Optimizer 後，您會看到一個空白文字區塊。在其中輸入您對代理人目的的簡短描述，例如「一個幫助新員工快速查找 HR 政策和 IT 申請流程的企業內部助理」。點選 <strong>Optimize</strong>，Optimizer 會根據您的描述，自動生成包含角色定義、能力範圍、回應格式和拒絕條件的完整結構化指令。確認後點選 <strong>Use prompt</strong> 套用。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    如果代理人已有現有指令：對話框會先顯示現有指令。您可以直接點 <strong>Optimize</strong>（不加任何建議）讓 Optimizer 做結構和清晰度改善；也可以在建議欄填入額外方向，例如「加入拒絕回答不在 HR 範疇問題的說明」或「把回應格式改成繁體中文條列式」，然後點 Optimize。每次優化都以最新版本作為基準，可以無限次迭代。
+                </p>
+
+                <h2>理解優化理由：讀懂紫色標記</h2>
+
+                <p class="pw-post-body-paragraph">
+                    優化完成後，所有被修改的段落會以紫色左邊框標示。點選段落旁的 💬 圖示可查看該段落的個別修改理由；點選 <strong>Show all reasoning</strong> 切換可一次展開所有修改理由。理由說明會解釋套用了哪個提示詞工程原則，例如「增加明確的角色定義有助於模型保持一致的回覆個性」或「為模糊的邊界案例添加範例可減少模型的不確定性」。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    重要注意事項：Prompt Optimizer 的結果不會自動儲存。如果在未點選 <strong>Use prompt</strong> 的情況下關閉對話框，優化結果會消失。建議的工作流程：開始優化前，先複製目前的指令文字備份；優化後仔細閱讀所有修改理由，針對不符合您使用情境的修改暫不接受；套用後立即在 Playground 測試，確認行為符合預期；滿意後才正式儲存代理人設定。
+                </p>
+
+                <h2>搭配評估功能實現指令的持續改善</h2>
+
+                <p class="pw-post-body-paragraph">
+                    Prompt Optimizer 的最大價值在於搭配評估（Evaluation）功能形成改善閉環。流程是：建立評估資料集（代表性問答對）→ 跑評估、取得基準分數 → 用 Prompt Optimizer 優化指令 → 再次跑評估對比改善幅度 → 迭代。這樣每次改動都有量化的效果測量，避免「感覺有改善但實際上退步」的陷阱。評估的詳細設定請見<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/evaluate-agent">Foundry 評估文件</a>。
+                </p>
+
+                <p class="pw-post-body-paragraph">
+                    Prompt Optimizer 是提示詞工程的輔助工具，不是替代工具——它能幫您快速建立結構良好的初版指令，或在已有的指令上做通用的清晰度和結構改善，但它不了解您的業務邏輯細節。最終的指令品質取決於您對業務需求的理解和對評估結果的詮釋。把它當作一個懂提示詞工程的協作夥伴，而非可以完全自動化的工具。
+                </p>
+
+            </section>
+        </article>
+    </main>
+</body>
+</html>
