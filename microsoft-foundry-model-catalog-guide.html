@@ -27,6 +27,11 @@
 
                 <h2>Deployment Models: Pay-per-Token vs Dedicated Compute</h2>
 
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry-classic/media/explore/platform-service-cycle.png" alt="Diagram showing the service cycle differences between managed compute deployments and serverless deployments in Microsoft Foundry Models" />
+                    <figcaption>Managed compute (left) deploys model weights to dedicated VMs billed by core-hours; serverless (right) routes through Microsoft-managed infrastructure billed per token.</figcaption>
+                </figure>
+
                 <p class="pw-post-body-paragraph">Foundry supports two deployment paths with different cost and isolation profiles. Serverless deployments provide API access to Microsoft-hosted model infrastructure billed per input and output token — ideal for variable workloads or when exploring multiple models in parallel. Managed compute deployments provision dedicated virtual machines for a model, billed by core-hours regardless of usage — suited for high-volume production workloads with predictable throughput requirements or for models that must run in your network perimeter.</p>
 
                 <p class="pw-post-body-paragraph">Within serverless deployments, several sub-types address different compliance requirements: Global Standard routes traffic globally for maximum availability; Data Zone Standard keeps data within a geographic boundary (EU or US); Regional deployments confine inference to a specific Azure region. Global Batch and Data Zone Batch offer asynchronous processing for large workloads at reduced cost. The right combination depends on your latency tolerance, data residency requirements, and budget model.</p>

@@ -21,11 +21,21 @@
 
                 <h2>Agentic Retrieval: More Than Simple RAG</h2>
 
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/search/media/agentic-retrieval/agentic-retrieval-architecture.png" alt="Diagram of the agentic retrieval workflow showing query planning, parallel subquery execution, and result synthesis" />
+                    <figcaption>Agentic retrieval coordinates query planning (LLM), parallel execution (Azure AI Search), semantic reranking, and result synthesis into a single managed pipeline.</figcaption>
+                </figure>
+
                 <p class="pw-post-body-paragraph">Traditional RAG (Retrieval-Augmented Generation) pipelines do a single vector search, grab the top-k chunks, and stuff them into a context window. Foundry IQ's agentic retrieval is more sophisticated. It uses a large language model — from Azure OpenAI in Foundry Models — as a query planner, breaking complex questions into parallel subqueries before searching. This means a question like "What changed in our refund policy since Q3 last year and how does it compare to competitor policies?" gets intelligently decomposed rather than reduced to a single embedding lookup.</p>
 
                 <p class="pw-post-body-paragraph">The retrieval reasoning effort is configurable at three levels: minimal, low, and medium. Higher effort means more LLM processing and better results for complex queries, at the cost of latency and token consumption. For high-throughput, simple lookup scenarios, minimal effort keeps costs in check while still leveraging the agentic architecture.</p>
 
                 <h2>Permission-Aware by Design</h2>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/search/media/agentic-retrieval/agentric-retrieval-example.png" alt="Diagram showing how agentic retrieval handles a complex query with implied context and an intentional typo" />
+                    <figcaption>Agentic retrieval handles compound questions, typos, and implied context that trip up single-vector RAG — decomposing them into focused subqueries automatically.</figcaption>
+                </figure>
 
                 <p class="pw-post-body-paragraph">One of Foundry IQ's most important enterprise features is its access control enforcement. The knowledge base can synchronize access control lists (ACLs) from supported sources and honor Microsoft Purview sensitivity labels. At query time, Foundry IQ enforces permissions under the caller's Microsoft Entra identity — meaning agents return only content the requesting user is authorized to see. This is critical for multi-tenant or role-differentiated deployments where different users interacting with the same agent should get different results based on their permissions.</p>
 

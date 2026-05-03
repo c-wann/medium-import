@@ -21,6 +21,11 @@
 
                 <h2>Network Isolation and Data Residency</h2>
 
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/agents/media/private-network-isolation.png" alt="Diagram showing the virtual network architecture for Foundry Agent Service with agent subnet, private endpoint subnet, and private DNS zones" />
+                    <figcaption>The Standard Setup with private networking provisions an agent subnet (delegated to Microsoft.App/environments) and a separate private endpoint subnet, with private DNS zones for each dependent service.</figcaption>
+                </figure>
+
                 <p class="pw-post-body-paragraph">Foundry Agent Service supports full virtual network isolation for prompt agents and workflow agents, keeping agent traffic off the public internet entirely. Hosted agents go further with a bring-your-own Virtual Network (BYO VNet) model where each session runs in a VM-isolated sandbox connected to your organization's VNet. This is critical for regulated industries where data residency and network segregation are non-negotiable compliance requirements.</p>
 
                 <p class="pw-post-body-paragraph">Private endpoints for dependent services — Azure AI Search, Azure Cosmos DB for conversation state, blob storage for files — complete the network isolation picture. Organizations with strict data handling requirements can route all agent data flows through their private network perimeter, with no data traversing the public internet between any component of the agent architecture.</p>

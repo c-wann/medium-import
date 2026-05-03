@@ -19,6 +19,11 @@
 
                 <p class="pw-post-body-paragraph">The SDK supports Python, JavaScript, C#, and Rust. On Windows, it integrates directly with the Windows ML runtime, unlocking a wider range of hardware acceleration options across CPUs, GPUs, and NPUs. The cross-platform version works on macOS and Linux as well, giving developers consistent tooling regardless of their operating system.</p>
 
+                <figure>
+                    <img src="https://devblogs.microsoft.com/foundry/wp-content/uploads/sites/89/2026/04/foundry-local-architecture.webp" alt="Foundry Local architecture diagram showing SDK, Core library, ONNX Runtime, and execution provider layers" />
+                    <figcaption>The Foundry Local stack: a thin language SDK calls into the Core native library, which manages model lifecycle via ONNX Runtime and hardware-matched execution providers.</figcaption>
+                </figure>
+
                 <h2>How It Works: Execution Providers and Model Catalog</h2>
 
                 <p class="pw-post-body-paragraph">Foundry Local uses the concept of execution providers (EPs) — hardware-optimized runtimes that accelerate model inference on specific silicon. When you initialize the SDK, it discovers available execution providers on your machine, downloads and registers the appropriate ones, then loads your chosen model. The download is a one-time operation; once an EP is registered, it only needs updating when a new version ships.</p>

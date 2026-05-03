@@ -17,11 +17,21 @@
 
                 <p class="pw-post-body-paragraph">The <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/ai-red-teaming-agent">AI Red Teaming Agent</a> combines Microsoft's open-source PyRIT (Python Risk Identification Tool) framework with Foundry's Risk and Safety Evaluations to automate three things: scanning your AI endpoints for content risks by simulating adversarial probing, evaluating each attack-response pair to generate metrics like Attack Success Rate (ASR), and producing a scorecard of results that can be logged, monitored, and tracked over time in Foundry.</p>
 
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/evaluations/red-teaming-agent/map-measure-mitigate-ai-red-teaming.png" alt="Diagram of how to use AI Red Teaming Agent showing proactive to reactive and less costly to more costly risk management" />
+                    <figcaption>NIST's Map-Measure-Manage framework applied to AI safety: the Red Teaming Agent sits in the Measure phase, automating what was previously manual and costly adversarial probing.</figcaption>
+                </figure>
+
                 <p class="pw-post-body-paragraph">The key metric — Attack Success Rate — measures what percentage of adversarial prompts successfully elicited harmful or unsafe responses from the model. A low ASR indicates a robust safety posture; a high ASR flags specific risk categories or attack vectors that need mitigation before deployment. Results are redacted when shown to developers to prevent unnecessary exposure to harmful content.</p>
 
                 <h2>How Adversarial Probing Works</h2>
 
                 <p class="pw-post-body-paragraph">Direct adversarial prompting — simply asking a model to do something harmful — is often caught by existing safety alignment. The Red Teaming Agent goes further by applying attack strategies from PyRIT that transform prompts to bypass these safeguards. The catalog includes over 20 attack types: Base64 encoding, Caesar cipher, character swapping, Leetspeak, ANSI escape sequences, Unicode confusable characters, ROT13, Morse code, URL encoding, jailbreak injections, and more nuanced multi-turn attacks like Crescendo, which gradually escalates prompt complexity across conversation turns.</p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/evaluations/red-teaming-agent/how-ai-red-teaming-works.png" alt="Diagram of how AI Red Teaming Agent applies attack strategies to bypass safety alignment and elicit unsafe responses" />
+                    <figcaption>A direct harmful request triggers a refusal; the same request encoded with an attack strategy like character-flipping can bypass the model's safety alignment entirely.</figcaption>
+                </figure>
 
                 <p class="pw-post-body-paragraph">Each of these strategies exploits a different failure mode in safety filters. A model that refuses "tell me how to make a weapon" might comply when the same request arrives as Base64-encoded text or through a Crescendo sequence that builds up context incrementally. By systematically applying all these strategies against all supported risk categories, the Red Teaming Agent surfaces vulnerabilities that manual testers would likely miss.</p>
 

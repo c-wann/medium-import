@@ -19,6 +19,11 @@
 
                 <p class="pw-post-body-paragraph">This architecture shift is significant. You're no longer building prompt pipelines — you're building systems that act. Agent Service handles the orchestration, memory between turns, tool invocation, and retry logic so you don't have to wire that yourself.</p>
 
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/agents/media/what-is-an-agent.png" alt="Diagram showing the three core components of every Foundry agent: model, instructions, and tools" />
+                    <figcaption>Every Foundry agent combines three components — a model, instructions, and tools — into a system that can take autonomous action.</figcaption>
+                </figure>
+
                 <h2>Three Agent Types for Every Scenario</h2>
 
                 <p class="pw-post-body-paragraph">Foundry Agent Service offers three distinct agent types. Prompt agents require no code at all — you configure instructions, select a model, add tools, and Agent Service handles everything. They're ideal for rapid prototyping and internal tools, and you can create one in the Foundry portal in minutes.</p>
@@ -34,6 +39,11 @@
                 <p class="pw-post-body-paragraph">MCP (Model Context Protocol) support is a standout addition. You can connect remote MCP servers — including custom ones hosted on Azure Functions — directly from the Add Tools catalog in the portal. Authentication options include key-based access, Microsoft Entra managed identity, and OAuth On-Behalf-Of passthrough for user-delegated permissions.</p>
 
                 <h2>The Full Development Lifecycle in One Platform</h2>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/control-plane/media/overview/control-plane-operate.png" alt="Screenshot showing the Operate toolbar button and the Overview pane in the Foundry workspace" />
+                    <figcaption>The Foundry portal's Operate toolbar gives administrators fleet-level visibility directly alongside the build and test experience.</figcaption>
+                </figure>
 
                 <p class="pw-post-body-paragraph">Agent Service covers the entire build-test-deploy-monitor workflow. You create an agent, test it in the agents playground where MCP integrations can be exercised via chat, then inspect every model call and tool invocation with <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/concepts/trace-agent-concept">agent tracing</a>. From there you run evaluations to measure quality, publish the agent to a managed resource with a stable endpoint, and monitor it with service metrics dashboards.</p>
 

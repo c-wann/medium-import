@@ -17,6 +17,11 @@
 
                 <p class="pw-post-body-paragraph">In Microsoft Foundry Agent Service, MCP is a first-class <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/tool-catalog">custom tool type</a> alongside OpenAPI tools and Agent-to-Agent (A2A) connections. An MCP server is simply an endpoint that exposes tools using the Model Context Protocol. When you connect an MCP server to a Foundry agent, the agent can discover the tools it exposes and call them autonomously during conversations, the same way it would use built-in tools like web search or code interpreter.</p>
 
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/agents/media/tool-catalog/tool-example.png" alt="Screenshot of a tool details page in the Foundry portal showing configuration and setup information" />
+                    <figcaption>Each entry in the Foundry tool catalog shows the endpoint URL, required authentication method, and configuration fields — no hunting through documentation to get a tool connected.</figcaption>
+                </figure>
+
                 <p class="pw-post-body-paragraph">The Foundry portal includes a browsable tool catalog with pre-configured remote MCP servers from Microsoft and third-party publishers. The Azure DevOps MCP Server (public preview), for example, can be connected directly from the catalog — you supply your Azure DevOps organization and a subset of permitted tools, and the agent gains access to DevOps data and actions without writing any integration code.</p>
 
                 <h2>Building Your Own MCP Server on Azure Functions</h2>

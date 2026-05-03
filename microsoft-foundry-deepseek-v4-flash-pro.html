@@ -23,6 +23,11 @@
 
                 <p class="pw-post-body-paragraph">The real power of having both models in the same platform isn't choosing one over the other — it's using them together. A production-grade AI system can route simple, high-volume interactions to DeepSeek V4 Flash while sending complex queries that require deeper reasoning to V4 Pro. This pattern — intelligent model routing — dramatically changes the economics of enterprise AI. You pay premium prices only for the subset of requests that actually need premium reasoning capability.</p>
 
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry-classic/media/explore/model-publisher-cycle.png" alt="Diagram showing the model publisher service cycle for serverless deployments of Microsoft Foundry Models" />
+                    <figcaption>Serverless deployments — used for both DeepSeek V4 Flash and Pro — route requests through Microsoft-managed infrastructure billed per token, with no VM provisioning required.</figcaption>
+                </figure>
+
                 <p class="pw-post-body-paragraph">Microsoft Foundry's model routing infrastructure makes this pattern practical. Both models share a single API endpoint and consistent interface, so switching between them is a configuration change, not a rewrite. The platform also supports evaluation and comparison using your own datasets, letting you empirically validate quality thresholds before setting routing rules. DeepSeek V4 Flash is available now at $1.03 per million input tokens and $4.12 per million output tokens; V4 Pro pricing is forthcoming.</p>
 
                 <h2>Enterprise Controls Come Standard</h2>
