@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2026-03-31T12:00:00.000Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Observability in Microsoft Foundry Is Finally Good Enough to Be Part of the Release Process</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">A lot of AI teams still treat evaluation as something you do before launch and monitoring as something you bolt on afterward. That separation no longer makes much sense in Microsoft Foundry, where tracing, built-in evaluators, continuous evaluation, and dashboard monitoring are increasingly designed to work as one operational system.</p>
+
+                <h2>Foundry Now Treats Observability as a Lifecycle Feature</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft's observability overview is explicit that Foundry's stack is built around three core capabilities: evaluation, monitoring, and tracing <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/observability">across the full generative-AI lifecycle</a>. That framing matters because it moves quality and safety out of the realm of one-off benchmarks and into the same lifecycle conversation as deployment and operations.</p>
+
+                <p class="pw-post-body-paragraph">The three stages Microsoft describes are also the right ones: model selection, pre-production evaluation, and post-production monitoring <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/observability">with different tools at each phase</a>. The implication is simple but important: if your team only runs offline tests before launch, you are using a fraction of what the platform now assumes a mature AI release process should include.</p>
+
+                <h2>Tracing Has Become More Than Debug Logging</h2>
+
+                <p class="pw-post-body-paragraph">Foundry tracing is now grounded in OpenTelemetry and stores telemetry in Azure Monitor Application Insights, which makes traces queryable alongside more conventional application signals <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/concepts/trace-agent-concept">instead of living in an AI-only debugging pane</a>. That is a stronger foundation than many agent frameworks still offer by default.</p>
+
+                <p class="pw-post-body-paragraph">The trace model is also maturing around multi-agent systems. Microsoft, working with Cisco Outshift, has documented semantic conventions for spans like `execute_task`, `invoke_agent`, and `execute_tool`, along with attributes for tool arguments, tool results, and evaluation events <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/concepts/trace-agent-concept">so agent behavior can be inspected as a real execution graph</a>. That makes tracing useful for systems reasoning, not just postmortem screenshots.</p>
+
+                <h2>The Dashboard Is Useful Because It Is Opinionated</h2>
+
+                <p class="pw-post-body-paragraph">The Agent Monitoring Dashboard is more interesting than it first looks because it puts the right top-level metrics in front of teams: token usage, latency, run success rate, evaluation scores, and red-teaming results <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard">for a selected time range</a>. It is not trying to be infinitely customizable first. It is trying to make the obvious questions answerable quickly.</p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/observability/how-to-monitor-agents-dashboard/foundry-metrics-dashboard.png" alt="Microsoft Foundry Agent Monitoring Dashboard with summary cards and charts" />
+                    <figcaption>The dashboard matters because it keeps operational metrics and evaluation signals in the same working view.</figcaption>
+                </figure>
+
+                <p class="pw-post-body-paragraph">That same monitoring flow now supports continuous evaluation rules, scheduled evaluations, red-team scans, and alerts from the Monitor settings panel <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard">instead of leaving quality checks stranded in notebook scripts</a>. Once those controls live next to latency and success-rate charts, it becomes much harder for a team to claim quality drift is someone else's problem.</p>
+
+                <h2>The Evaluator Catalog Is Broad Enough to Be Operationally Useful</h2>
+
+                <p class="pw-post-body-paragraph">One reason this stack can fit into release gates is that the evaluator catalog is no longer narrow. Foundry now ships built-in evaluator groups for general quality, textual similarity, RAG, safety, agent behavior, and Azure OpenAI graders <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/built-in-evaluators">that can be combined by scenario</a>. Microsoft even spells out example bundles, such as Retrieval plus Groundedness plus Relevance plus Content Safety for RAG apps, or Tool Call Accuracy plus Task Adherence plus Intent Resolution plus safety checks for agent apps.</p>
+
+                <p class="pw-post-body-paragraph">That breadth is what makes observability genuinely operational. Teams are no longer limited to asking "did it answer?" They can ask whether it answered coherently, stayed grounded, avoided unsafe content, selected the right tool, passed the right parameters, and completed the task efficiently <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/built-in-evaluators">with the platform's own evaluation vocabulary</a>.</p>
+
+                <h2>The Right Release Pattern Is Emerging</h2>
+
+                <p class="pw-post-body-paragraph">The release pattern that makes sense now is fairly clear. Use offline and playground evaluations to shape prompts and tool design, instrument traces before you publish, enable continuous evaluation on sampled production traffic, and set alerts on the metrics that matter to your app's failure modes <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard">rather than waiting for anecdotal feedback</a>. That is closer to normal software release discipline than most AI teams have practiced so far.</p>
+
+                <p class="pw-post-body-paragraph">The missing piece is cultural rather than technical. Teams have to treat evaluation and tracing results as release inputs, not optional reports. Foundry is finally making that operational posture easy enough that skipping it becomes harder to justify.</p>
+
+                <h2>Conclusion</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft Foundry's observability stack is now strong enough to influence how teams ship, not just how they debug. That is a meaningful maturity threshold for any AI platform.</p>
+
+                <p class="pw-post-body-paragraph">If you are still running a generative-AI release process without production traces, continuous evaluations, and explicit safety metrics, the platform is now offering a better standard. The real question is whether teams are ready to adopt it.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>

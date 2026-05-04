@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2026-03-02T09:30:00.000Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Foundry Agent Service GA Makes Enterprise Agent Networking and Voice Actually Deployable</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">Prototype agents are easy to celebrate because they dodge the hardest deployment questions. The real test arrives when security teams ask about network paths, operations teams ask for monitoring, and product teams ask whether the same agent can work over voice without spawning a second observability stack, which is why the March general-availability release of <a href="https://devblogs.microsoft.com/foundry/foundry-agent-service-ga/">Foundry Agent Service</a> matters more than a typical platform milestone.</p>
+
+                <h2>The Responses API Bet Is Strategic</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft has built the next-gen Agent Service on the OpenAI Responses API and emphasizes wire compatibility with existing OpenAI agent patterns <a href="https://devblogs.microsoft.com/foundry/foundry-agent-service-ga/">rather than inventing a proprietary contract</a>. That is a smart move because it makes migration less about rewriting orchestration logic and more about layering enterprise controls on top of workflows teams may already have in flight.</p>
+
+                <p class="pw-post-body-paragraph">The March release notes repeat the same message in shorthand: use the same agentic protocol, then gain private networking, Entra RBAC, evaluation, tracing, and multi-model openness on top of it <a href="https://devblogs.microsoft.com/foundry/whats-new-in-microsoft-foundry-mar-2026/">inside the Foundry platform</a>. In other words, Microsoft is trying to compete on production posture, not just on agent syntax.</p>
+
+                <h2>Private Networking Finally Reaches the Tool Layer</h2>
+
+                <p class="pw-post-body-paragraph">The strongest GA capability is probably not voice. It is end-to-end private networking. Microsoft's GA announcement says Agent Service now supports bring-your-own virtual network with no public egress and extends that isolation beyond model calls to tool connectivity, including MCP servers, Azure AI Search, and Fabric data agents <a href="https://devblogs.microsoft.com/foundry/foundry-agent-service-ga/">inside the same network boundary</a>.</p>
+
+                <p class="pw-post-body-paragraph">That matters because retrieval and tool execution are often where data exposure risk actually lives. The Agent Service overview now lists virtual network isolation, dedicated agent identity, and managed authentication options as core enterprise capabilities <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/overview">rather than optional add-ons</a>. For regulated deployments, that is the difference between an interesting pilot and something a review board might sign off on.</p>
+
+                <h2>Voice Live Is More Important Than It First Appears</h2>
+
+                <p class="pw-post-body-paragraph">Voice Live is easy to dismiss as a feature for demos, but the design is more interesting than that. Microsoft describes it as a managed speech-to-speech runtime that collapses the traditional STT to LLM to TTS stack into a single API with semantic turn detection, echo cancellation, noise suppression, and barge-in support <a href="https://devblogs.microsoft.com/foundry/foundry-agent-service-ga/">without forcing teams to stitch three latency domains together</a>.</p>
+
+                <p class="pw-post-body-paragraph">The key architectural choice is that Voice Live is not a sidecar product. Voice traffic is wired into the same Foundry agent runtime, so prompts, tools, evaluations, traces, and cost visibility remain unified across text and speech <a href="https://devblogs.microsoft.com/foundry/whats-new-in-microsoft-foundry-mar-2026/">instead of splitting voice into a second operational plane</a>. That is exactly the kind of design choice enterprise teams care about once pilots become channels.</p>
+
+                <h2>GA Evaluations Change the Quality Story</h2>
+
+                <p class="pw-post-body-paragraph">The release also pushes evaluations from pre-launch exercise to production loop. Microsoft says Foundry Evaluations are now generally available with built-in evaluators, custom evaluators, and continuous evaluation that samples live traffic and sends results into Azure Monitor Application Insights <a href="https://devblogs.microsoft.com/foundry/foundry-agent-service-ga/">for alerting and investigation</a>.</p>
+
+                <p class="pw-post-body-paragraph">The broader observability docs explain why that matters: Foundry's monitoring model combines evaluation metrics, tracing, latency, token usage, and red-team signals so quality drift is treated as an ongoing operational signal instead of a one-time test report <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/observability">across the application lifecycle</a>. That is a much more mature quality posture than the usual "we ran a benchmark before launch" story.</p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/media/observability/how-to-monitor-agents-dashboard/foundry-metrics-dashboard.png" alt="Agent Monitoring Dashboard in Microsoft Foundry showing operational and evaluation metrics" />
+                    <figcaption>The Agent Monitoring Dashboard is part of the reason the GA release matters: operational metrics and evaluation data now live together.</figcaption>
+                </figure>
+
+                <h2>GA Does Not Mean Finished</h2>
+
+                <p class="pw-post-body-paragraph">Even with the GA label, some of the most interesting parts of the stack are still staged. The March announcement pairs GA Agent Service with Voice Live preview and hosted agents preview in additional regions <a href="https://devblogs.microsoft.com/foundry/foundry-agent-service-ga/">rather than full platform finality</a>. That is normal, but it means teams should read "GA" here as the runtime contract becoming dependable, not every adjacent feature becoming production-default overnight.</p>
+
+                <p class="pw-post-body-paragraph">Still, this release changes the planning conversation. If your team is already building against Responses-style APIs, the migration path into Foundry is now much more about enterprise controls, network isolation, and monitoring than about changing developer mental models. That is a stronger position than many platform vendors manage when they move from preview to production.</p>
+
+                <h2>Conclusion</h2>
+
+                <p class="pw-post-body-paragraph">Foundry Agent Service GA is important because it addresses the things that usually kill enterprise agent projects after the demo. Private networking, unified monitoring, and a coherent voice path are not flashy compared with new models, but they are what makes agents deployable.</p>
+
+                <p class="pw-post-body-paragraph">If Microsoft keeps the platform open at the protocol layer while continuing to deepen the control plane, Foundry Agent Service could become the default landing zone for teams that want agent flexibility without owning every production concern themselves.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
+
+                <p class="pw-post-body-paragraph">The March digest fills in the feature set: semantic voice activity detection, semantic end-of-turn detection, server-side noise suppression, echo cancellation, and barge-in support all arrive as part of the managed runtime, while the agent’s prompt, tools, and safety configuration remain in Foundry <a href="https://devblogs.microsoft.com/foundry/whats-new-in-microsoft-foundry-mar-2026/">instead of being duplicated in a separate voice stack</a>. That is exactly the kind of boring systems simplification voice teams usually need more than another demo.</p>
+
+                <h2>Post-Launch Quality Stops Being a Blind Spot</h2>
+
+                <p class="pw-post-body-paragraph">The release also matters because evaluations are now framed as a production feature, not just a pre-ship exercise. Microsoft positions Foundry Evaluations GA around built-in evaluators, custom evaluators, and continuous evaluation of sampled live traffic routed into Azure Monitor and Application Insights <a href="https://devblogs.microsoft.com/foundry/foundry-agent-service-ga/">for operational alerting</a>.</p>
+
+                <p class="pw-post-body-paragraph">The Agent Monitoring Dashboard documentation shows what that looks like in practice: the Monitor tab surfaces token usage, latency, run success rates, evaluation scores, and red-teaming results, while continuous evaluation rules can trigger on response completion and sample production traffic automatically <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard">without a separate bespoke monitoring plane</a>. That closes a real gap between AI experimentation and SRE reality.</p>
+
+                <h2>Why This GA Matters More Than the Label</h2>
+
+                <p class="pw-post-body-paragraph">The March announcement summary bundled a lot of releases together, but the through-line is clear: Agent Service GA is where networking, voice, identity, tool auth, evaluations, and hosted deployment start to act like one platform <a href="https://devblogs.microsoft.com/foundry/whats-new-in-microsoft-foundry-mar-2026/">instead of separate roadmap bullets</a>. That integration is what enterprise teams have been waiting to see.</p>
+
+                <p class="pw-post-body-paragraph">GA does not mean every operational edge case is solved, but it does mean the conversation can move from “can we demo this?” to “can we standardize on this runtime?” That is a much more consequential question for any organization trying to put agents in front of real users.</p>
+
+                <h2>Conclusion</h2>
+
+                <p class="pw-post-body-paragraph">The real achievement in this release is not voice or VNet support in isolation. It is that Foundry is starting to combine them with identity, evaluation, and managed publishing in one service boundary.</p>
+
+                <p class="pw-post-body-paragraph">That is what makes Foundry Agent Service GA notable. It turns enterprise agent delivery from an integration project into something closer to a platform choice, and that is a much stronger place for Microsoft to compete.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>

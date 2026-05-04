@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2026-01-21T10:00:00.000Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Hosted Agents in Microsoft Foundry Turn AI Sandboxes Into a First-Class Runtime</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">Most agent demos still assume the runtime problem is solved the moment an LLM can call a tool. It is not. Once an agent starts writing files, executing code, holding state across turns, and acting with enterprise credentials, you stop needing a chatbot host and start needing something much closer to a managed application platform, which is the gap Microsoft is trying to close with <a href="https://devblogs.microsoft.com/foundry/introducing-the-new-hosted-agents-in-foundry-agent-service-secure-scalable-compute-built-for-agents/">hosted agents in Foundry Agent Service</a>.</p>
+
+                <h2>Why Generic Compute Breaks for Agents</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft's hosted-agents launch post makes the argument directly: containers, web apps, and serverless functions were designed for shared-service patterns, not for agent sessions that write arbitrary files, execute code, and hold sensitive working context <a href="https://devblogs.microsoft.com/foundry/introducing-the-new-hosted-agents-in-foundry-agent-service-secure-scalable-compute-built-for-agents/">on behalf of individual users</a>. If two users land on the same runtime and the agent can manipulate disk state or credentials, isolation is no longer an optimization problem. It becomes a trust problem.</p>
+
+                <p class="pw-post-body-paragraph">The hosted agents concept page translates that into product behavior: each session runs inside a VM-isolated sandbox with persistent filesystem state in `$HOME` and `/files`, and the platform can deprovision idle compute while restoring that state when the session resumes <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents">after inactivity</a>. That design is unusually specific for an agent platform because it treats stateful execution as the default case rather than the edge case.</p>
+
+                <h2>The Session Model Is the Story</h2>
+
+                <p class="pw-post-body-paragraph">Hosted agents are compelling less because they run containers and more because they expose a session abstraction that maps cleanly to agent workloads. According to the docs, sessions can persist for up to 30 days, idle compute is deprovisioned after 15 minutes, and the platform restores the session's files and state when work resumes <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents">without requiring you to rebuild the agent's environment by hand</a>.</p>
+
+                <p class="pw-post-body-paragraph">That lets an agent behave more like a long-running worker than a stateless API endpoint. A coding agent can keep artifacts on disk, a research agent can preserve intermediate files, and a human-in-the-loop workflow can pick up where it left off instead of replaying the whole interaction chain from scratch <a href="https://devblogs.microsoft.com/foundry/from-local-to-production-the-complete-developer-journey-for-building-composing-and-deploying-ai-agents/">every time a user returns</a>.</p>
+
+                <figure>
+                    <img src="https://learn.microsoft.com/en-us/azure/foundry/agents/media/what-is-an-agent.png" alt="Diagram showing the components of an agent in Microsoft Foundry" />
+                    <figcaption>Hosted agents sit at the code-driven end of Foundry's agent spectrum: model, instructions, and tools are still core, but the runtime is no longer prompt-only.</figcaption>
+                </figure>
+
+                <h2>Protocols and Identity Matter More Than Framework Choice</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft is also being more flexible than many managed platforms usually allow. Hosted agents can expose the Responses protocol for OpenAI-compatible conversational flows, the Invocations protocol for arbitrary JSON payloads, plus Activity and A2A support for Microsoft 365 channels and agent-to-agent delegation <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents">from the same deployed agent</a>. That means the platform is not forcing every workload into a single chat abstraction.</p>
+
+                <p class="pw-post-body-paragraph">Identity is handled with the same level of seriousness. Each hosted agent gets its own dedicated Microsoft Entra ID at deploy time, distinct from the project managed identity used for infrastructure operations, and can also participate in on-behalf-of flows when integrated through Microsoft 365 channels <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents">for downstream access control</a>. That is the kind of separation enterprises usually have to design for themselves.</p>
+
+                <h2>The Preview Limits Are Still Real</h2>
+
+                <p class="pw-post-body-paragraph">This is still a preview product, and the limits are not cosmetic. The docs currently cap active concurrent sessions at 50 per subscription per region by default, limit sandbox sizes to between 0.25 vCPU and 2 vCPU, and note that the Azure Container Registry storing your image must remain reachable over a public endpoint because private-network-secured ACR is not yet supported <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents">for hosted-agent image pulls</a>.</p>
+
+                <p class="pw-post-body-paragraph">The launch post adds another useful reality check: hosted agents are most valuable when agents need secure per-session isolation, persistent disk, and scale-to-zero economics, not when a simple prompt agent is already enough <a href="https://devblogs.microsoft.com/foundry/introducing-the-new-hosted-agents-in-foundry-agent-service-secure-scalable-compute-built-for-agents/">for the job</a>. Teams should resist the urge to treat hosted agents as the default deployment target for every Foundry app.</p>
+
+                <h2>Where Hosted Agents Fit</h2>
+
+                <p class="pw-post-body-paragraph">The Agent Service overview now positions prompt agents, workflow agents, and hosted agents as three distinct choices: prompt agents for rapid prototyping, workflow agents for declarative orchestration, and hosted agents when you need full code-level control over behavior and runtime <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/overview">instead of a configuration-only definition</a>. That is a useful taxonomy because it tells platform teams when they are buying flexibility and when they are just buying complexity.</p>
+
+                <p class="pw-post-body-paragraph">In practical terms, hosted agents look best suited to coding agents, ops agents, research workflows, and any scenario where filesystem state, custom protocols, or framework-specific orchestration are essential. They are less a replacement for prompt agents than a missing execution tier for serious agent applications.</p>
+
+                <h2>Conclusion</h2>
+
+                <p class="pw-post-body-paragraph">Hosted agents are one of the more credible signs that Microsoft understands where the agent market is moving. The hard production problems are isolation, identity, state, and lifecycle management, not just prompt engineering.</p>
+
+                <p class="pw-post-body-paragraph">If the preview matures well, hosted agents could become the part of Foundry that makes custom agent code operationally sane. That would be a much bigger deal than simply giving developers another place to run containers.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
+
+                <p class="pw-post-body-paragraph">Identity is equally central. Every hosted agent gets its own Microsoft Entra agent identity and dedicated endpoint at deploy time, while the project managed identity remains separate for platform operations <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents">such as pulling images and managing infrastructure</a>. The result is a cleaner separation between runtime permissions and platform plumbing than many teams achieve on their own.</p>
+
+                <p class="pw-post-body-paragraph">Microsoft is also deliberately keeping the harness layer open. The launch blog says teams can bring LangGraph, Microsoft Agent Framework, the OpenAI Agents SDK, Claude Agent SDK, GitHub Copilot SDK, or their own code, then package the environment with a Dockerfile and deploy through `azd deploy` <a href="https://devblogs.microsoft.com/foundry/introducing-the-new-hosted-agents-in-foundry-agent-service-secure-scalable-compute-built-for-agents/">without being forced into one orchestration model</a>. That is a much better strategic position than a “platform-only” agent runtime.</p>
+
+                <h2>The Preview Caveats Matter</h2>
+
+                <p class="pw-post-body-paragraph">None of this means the preview is frictionless. The hosted-agents documentation currently calls out preview limits including quota ceilings, language support centered on Python and C#, and a notable networking caveat: the Azure Container Registry holding your agent image still needs a reachable public endpoint because private-network-secured ACR is not yet supported <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agents">for image retrieval</a>.</p>
+
+                <p class="pw-post-body-paragraph">The launch post adds another useful reality check in the comments: VNet-routed Docker image retrieval was explicitly described by the product team as not fully there yet <a href="https://devblogs.microsoft.com/foundry/introducing-the-new-hosted-agents-in-foundry-agent-service-secure-scalable-compute-built-for-agents/">even though broader BYO VNet support is part of the preview story</a>. That is the kind of detail platform teams should validate before promising a fully isolated build-and-run path.</p>
+
+                <h2>Conclusion</h2>
+
+                <p class="pw-post-body-paragraph">Hosted agents are compelling because they finally treat agent execution as its own runtime category. The combination of per-session isolation, persistent state, built-in identity, and protocol flexibility is much closer to what real enterprise agents need than generic app hosting ever was.</p>
+
+                <p class="pw-post-body-paragraph">The preview still needs hardening around networking and operational edges, but the architectural direction is clear. Microsoft is not just offering somewhere to run agents; it is defining what an agent-native runtime should look like.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>

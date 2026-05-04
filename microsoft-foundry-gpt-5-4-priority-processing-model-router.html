@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2026-03-22T11:30:00.000Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>GPT-5.4, Priority Processing, and Model Router Change How You Design Microsoft Foundry Apps</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">The most useful thing happening in Microsoft Foundry right now is not just that new models keep arriving. It is that model choice is turning into a runtime control problem, with different models, routing modes, and latency tiers combining into a more dynamic architecture than the old pattern of picking one model and hoping it fits every request.</p>
+
+                <h2>GPT-5.4 Expands the Top of the Stack</h2>
+
+                <p class="pw-post-body-paragraph">March gave Foundry a full GPT-5.4 ladder: GPT-5.4, GPT-5.4 Pro, and GPT-5.4 Mini, with Microsoft positioning the family around better reasoning reliability, stronger instruction adherence, and more dependable multi-step execution <a href="https://devblogs.microsoft.com/foundry/whats-new-in-microsoft-foundry-mar-2026/">for production agentic workloads</a>. That is a more practical story than raw benchmark bragging because enterprise agents usually fail on drift and handoff quality before they fail on headline intelligence.</p>
+
+                <p class="pw-post-body-paragraph">The Azure Direct model catalog adds useful deployment detail. GPT-5.4 and GPT-5.4 Pro support Responses API, functions, tools, computer use, and 1,050,000-token context windows, while GPT-5.4 Mini keeps a smaller but still substantial 400,000-token envelope and the same tool-oriented API posture <a href="https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure">inside the Foundry model catalog</a>. That creates a much cleaner tiering story for reasoning-heavy versus high-volume requests.</p>
+
+                <h2>Priority Processing Adds a New Latency Lever</h2>
+
+                <p class="pw-post-body-paragraph">Where things get more interesting is deployment behavior. Priority Processing is now generally available in Foundry for latency-sensitive production workloads, promising pay-per-call access to prioritized compute without forcing teams into provisioned throughput commitments <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/announcing-priority-processing-in-microsoft-foundry-for-performance-sensitive-ai/4504788">just to stabilize interactive response times</a>.</p>
+
+                <p class="pw-post-body-paragraph">The pricing and deployment guidance makes the tradeoff explicit. Microsoft recommends Priority Processing for latency-sensitive production, Standard for balanced workloads, Provisioned Throughput for mission-critical high scale, and Batch for bulk jobs <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/announcing-priority-processing-in-microsoft-foundry-for-performance-sensitive-ai/4504788">instead of pretending one deployment type fits everything</a>. That is a much healthier framing than the old habit of treating throughput, latency, and cost as if only one of them mattered.</p>
+
+                <h2>Model Router Makes Policy a First-Class Architecture Choice</h2>
+
+                <p class="pw-post-body-paragraph">The model side of that same shift is Model Router. Microsoft describes it as a trained routing layer that analyzes prompt complexity and task characteristics in real time, then chooses among eligible underlying models while honoring access rules and data-zone boundaries <a href="https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-router">instead of making application developers hardcode routing logic</a>.</p>
+
+                <p class="pw-post-body-paragraph">The current router story is stronger than many people realize. Foundry supports Balanced, Cost, and Quality modes, lets teams define a model subset, includes automatic failover, and now supports agentic scenarios with tools <a href="https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-router">within the same deployment abstraction</a>. In practice, that means routing policy is no longer just a hacky middleware layer. It is becoming a platform feature.</p>
+
+                <h2>The Best Design Pattern Is a Tiered One</h2>
+
+                <p class="pw-post-body-paragraph">Once you combine these pieces, a clearer pattern emerges. GPT-5.4 Mini handles high-volume classification, extraction, and lightweight tool flows, GPT-5.4 or Pro handles deeper reasoning, Model Router arbitrates which tier gets the request, and Priority Processing is reserved for interactions where latency itself is product-critical <a href="https://devblogs.microsoft.com/foundry/whats-new-in-microsoft-foundry-mar-2026/">such as interactive copilots or live agent steps</a>.</p>
+
+                <p class="pw-post-body-paragraph">That is a better architecture than defaulting every request to the biggest model. It also matches Microsoft's own guidance that smaller and cheaper models should absorb simpler requests while larger models stay available for genuinely complex ones <a href="https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-router">without sacrificing quality baselines</a>. The important shift is that cost optimization and quality control are no longer opposites. They are two knobs on the same platform.</p>
+
+                <h2>The Caveat Is Control</h2>
+
+                <p class="pw-post-body-paragraph">More routing freedom also means more configuration discipline. Model Router's effective context window is constrained by the smallest underlying model in the route, Claude models require separate deployment before routing can use them, and automatic updates can change the backing model set over time <a href="https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-router">if you are not explicit about subsets and versioning</a>. That is powerful, but it can also produce surprises if platform teams treat router defaults as fire-and-forget settings.</p>
+
+                <p class="pw-post-body-paragraph">The same goes for Priority Processing. It is a premium tier for a specific class of problem, not a default badge of seriousness. If every path gets routed to priority lanes and large reasoning models, the architecture stops being intelligent and starts being expensive.</p>
+
+                <h2>Conclusion</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft Foundry is moving beyond the simple question of which model is best. The more important question now is how you mix models, routing rules, and latency tiers to fit different user interactions inside one application.</p>
+
+                <p class="pw-post-body-paragraph">That is why GPT-5.4, Model Router, and Priority Processing matter together. They push Foundry from model catalog thinking toward workload design thinking, which is exactly where mature AI platforms should be heading.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>

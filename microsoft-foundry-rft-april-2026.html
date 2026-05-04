@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta property="article:published_time" content="2026-02-18T12:00:00.000Z" />
+</head>
+
+<body>
+    <main>
+        <article>
+            <section>
+                <div class="pw-post-title">
+                    <h1>Reinforcement Fine-Tuning in Microsoft Foundry Just Became Practical for Real Teams</h1>
+                </div>
+
+                <p class="pw-post-body-paragraph">Reinforcement fine-tuning has always sounded exciting in theory and expensive in practice. What changed in April is that Microsoft stopped talking about RFT as a frontier-only experiment and started talking about it as a workflow that teams can actually run, evaluate, and control inside <a href="https://devblogs.microsoft.com/foundry/whats-new-in-foundry-finetune-april-2026/">Microsoft Foundry Fine-Tuning</a>.</p>
+
+                <h2>Global Training Makes the First Experiment Cheaper</h2>
+
+                <p class="pw-post-body-paragraph">The most important April update is not glamorous: o4-mini can now run Global Training from more than a dozen Azure regions at lower per-token rates than Standard training <a href="https://devblogs.microsoft.com/foundry/whats-new-in-foundry-finetune-april-2026/">while keeping the same training infrastructure and model quality</a>. That lowers the barrier for distributed teams that want to test reinforcement loops without committing to a more expensive regional setup first.</p>
+
+                <p class="pw-post-body-paragraph">The Foundry model catalog documentation reinforces why o4-mini is the natural on-ramp. It is a GA reasoning model that is specifically listed as supporting RFT, while GPT-5 reinforcement fine-tuning remains private preview <a href="https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure">for now</a>. That gives teams a production-grade target for experimentation instead of forcing them into a waitlist-only path.</p>
+
+                <figure>
+                    <img src="https://devblogs.microsoft.com/foundry/wp-content/uploads/sites/89/2026/04/ft-o4mini-global-training.webp" alt="Diagram illustrating o4-mini global training in Microsoft Foundry" />
+                    <figcaption>Global Training matters because it turns RFT from a region-constrained specialty workflow into something more teams can trial cheaply.</figcaption>
+                </figure>
+
+                <h2>The Reward Loop Is More Flexible Now</h2>
+
+                <p class="pw-post-body-paragraph">April also added GPT-4.1, GPT-4.1-mini, and GPT-4.1-nano as model graders, which matters because many real tasks cannot be judged by exact string matching alone <a href="https://devblogs.microsoft.com/foundry/whats-new-in-foundry-finetune-april-2026/">when outputs are open-ended or tool-driven</a>. Microsoft still recommends starting with deterministic graders whenever possible, but the expanded model-grader set makes semantic scoring more practical when the task demands nuance.</p>
+
+                <p class="pw-post-body-paragraph">The reinforcement fine-tuning how-to fills in the technical reason. Foundry supports string-check, text-similarity, model, Python, endpoint, and multigrader patterns, all of which can reference `sample` and `item` fields through templated substitutions <a href="https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reinforcement-fine-tuning">to build the actual reward function</a>. That means the real unit of RFT design is not the model alone. It is the grader architecture.</p>
+
+                <h2>The Data Format Forces Better Discipline</h2>
+
+                <p class="pw-post-body-paragraph">One quiet but important detail in both the April announcement and the how-to docs is that RFT data is not shaped like standard supervised fine-tuning data. The last message in each item must be user- or developer-authored, while the ground-truth answer moves into top-level fields the grader can reference <a href="https://devblogs.microsoft.com/foundry/whats-new-in-foundry-finetune-april-2026/">instead of living in an assistant response</a>. That forces teams to think explicitly about how success will be measured before they ever launch a job.</p>
+
+                <p class="pw-post-body-paragraph">Microsoft's best-practice guidance also pushes a very pragmatic workflow: start with a small baseline set, test the base model with prompt engineering first, use the simplest grader that works, and change one variable at a time <a href="https://devblogs.microsoft.com/foundry/whats-new-in-foundry-finetune-april-2026/">while watching reward trends</a>. That is less exciting than the marketing phrase "self-improving model," but much more likely to produce a useful tuning run.</p>
+
+                <h2>Reward Hacking Is a Product Risk, Not an Academic Footnote</h2>
+
+                <p class="pw-post-body-paragraph">The strongest section in the April post is the warning about reward hacking. Microsoft explicitly calls out the failure mode where evaluation scores rise while visible output quality falls, usually because the model learns to satisfy the grader instead of the real task <a href="https://devblogs.microsoft.com/foundry/whats-new-in-foundry-finetune-april-2026/">through brittle shortcuts</a>. That is exactly why RFT projects fail when teams optimize the metric too early.</p>
+
+                <p class="pw-post-body-paragraph">The how-to documentation gives you the right monitoring lens for this. Reward metrics should trend upward over time, but large divergence between training and validation reward can signal reward hacking, and automatic evaluations are created throughout the job so you can inspect whether the model is genuinely improving <a href="https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reinforcement-fine-tuning">instead of gaming the reward</a>. In practice, that means RFT needs observability discipline, not just GPU budget.</p>
+
+                <h2>Who Should Use RFT Now</h2>
+
+                <p class="pw-post-body-paragraph">Microsoft is unusually clear that RFT is not the answer for everything. It is a good fit when tool-calling accuracy, policy enforcement, or structured extraction correctness can be scored clearly, and a poor fit when the goal is mainly style or tone adjustment <a href="https://devblogs.microsoft.com/foundry/whats-new-in-foundry-finetune-april-2026/">where prompt engineering or supervised fine-tuning are usually better choices</a>.</p>
+
+                <p class="pw-post-body-paragraph">That is why April's changes matter. They do not make RFT universally easy. They make it scoped, affordable, and inspectable enough that more teams can try it without pretending every customization problem needs a reward model behind it.</p>
+
+                <h2>Conclusion</h2>
+
+                <p class="pw-post-body-paragraph">RFT in Foundry is getting more practical because Microsoft is improving the economics, the grader options, and the operational feedback loop at the same time. That combination is what teams need to move from curiosity to real experimentation.</p>
+
+                <p class="pw-post-body-paragraph">The main lesson is simple: reinforcement fine-tuning succeeds when the reward definition is tighter than the hype. Foundry is starting to give teams the tools to respect that constraint instead of learning it the hard way.</p>
+
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
